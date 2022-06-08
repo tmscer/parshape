@@ -1,5 +1,6 @@
 import { Fragment, useRef } from "react";
 
+import Circle from "./Circle";
 import Line from "./Line";
 import { useUnit } from "./UnitContext";
 
@@ -50,6 +51,8 @@ export default function Canvas({
 function renderObject(obj) {
   if (obj.type === "line") {
     return <Line start={obj.start} stop={obj.stop} />;
+  } else if (obj.type === "circle") {
+    return <Circle center={obj.center} radius={obj.radius} />;
   }
 
   throw new Error(`Unknown geometry object of type ${obj.type}`);

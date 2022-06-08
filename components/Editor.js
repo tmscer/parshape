@@ -15,6 +15,11 @@ const INITIAL_STATE = [
     start: [100, 200],
     stop: [100, 0],
   },
+  {
+    type: "circle",
+    center: [72, 300],
+    radius: 99,
+  },
 ];
 
 export default function Editor() {
@@ -53,6 +58,26 @@ export default function Editor() {
           setObjects((objs) => [...objs, finalLine]);
           clearNew();
         }
+      } else if (newType === "circle") {
+        if (!newObject) {
+          setNewObject({
+            type: "circle",
+            center: [x, y],
+            // Some value to be updated later
+            radius: 10,
+          });
+        } else {
+          const dx = x - newObject.center[0];
+          const dy = y - newObject.center[1];
+
+          const finalCircle = {
+            ...newObject,
+            radius: Math.sqrt(dx * dx + dy * dy),
+          };
+
+          setObjects((objs) => [...objs, finalCircle]);
+          clearNew();
+        }
       }
     },
     [newType, newObject, clearNew]
@@ -73,6 +98,20 @@ export default function Editor() {
           return {
             ...newObj,
             stop: [x, y],
+          };
+        });
+      } else if (newType === "circle") {
+        setNewObject((newObj) => {
+          if (!newObj) {
+            return newObj;
+          }
+
+          const dx = x - newObj.center[0];
+          const dy = y - newObj.center[1];
+
+          return {
+            ...newObj,
+            radius: Math.sqrt(dx * dx + dy * dy),
           };
         });
       }
