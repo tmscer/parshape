@@ -5,7 +5,9 @@ import Line from "./Line";
 import { useUnit } from "./UnitContext";
 
 export default function Canvas({
-  size,
+  width,
+  numLines,
+  lineSkip,
   objects,
   pointer,
   onClick: onClickOuter,
@@ -32,8 +34,8 @@ export default function Canvas({
     <div
       ref={ref}
       style={{
-        width: unit(size),
-        height: unit(size),
+        width: unit(width),
+        height: unit(numLines * lineSkip * 2),
         backgroundColor: "#ccc",
         position: "relative",
         cursor: pointer ? "crosshair" : undefined,
@@ -44,8 +46,20 @@ export default function Canvas({
       {objects.map((obj, i) => (
         <Fragment key={i}>{renderObject(obj)}</Fragment>
       ))}
+      {arrayOfLen(numLines).map((i) => <div key={i} style={{
+        position: "absolute",
+        top: unit(i * lineSkip + i * lineSkip),
+        width: "100%",
+        height: unit(lineSkip),
+        backgroundColor: "red",
+        marginBottom: unit(lineSkip),
+      }}></div>)}
     </div>
   );
+}
+
+function arrayOfLen(n) {
+  return [...Array(n).keys()]
 }
 
 function renderObject(obj) {

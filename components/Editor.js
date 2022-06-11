@@ -1,6 +1,9 @@
+import { Stack } from "@mui/material";
+import { cloneDeep } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import Canvas from "./Canvas";
+import Settings, { getHsizePt } from "./Settings";
 import Toolbar from "./Toolbar";
 import { UnitContext } from "./UnitContext";
 
@@ -139,12 +142,26 @@ export default function Editor() {
     return [...objects, newObject];
   }, [objects, newObject]);
 
+  const [settings, setSettings] = useState(cloneDeep(Settings.DEFAULT_SETTINGS));
+
+  // TODO: Remove
+  useEffect(() => {
+    setObjects([]);
+  }, [settings]);
+
   return (
     <div>
+      <Stack direction="row" gap={4}>
+        <div>
+        </div>
+        <Settings settings={settings} onChange={setSettings} />
+      </Stack>
       <Toolbar onClick={onToolbarClick} />
       <UnitContext.Provider value={{ unit: "px" }}>
         <Canvas
-          size="500"
+          width={getHsizePt(settings.hsize)}
+          numLines={settings.numLines}
+          lineSkip={settings.baselineskip}
           objects={finalObjects}
           pointer={newType !== null}
           onClick={onCanvasClick}
