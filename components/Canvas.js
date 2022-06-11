@@ -19,8 +19,10 @@ export default function Canvas({
       throw new Error("Mouse event before knowing the ref");
     }
 
-    const x = event.clientX - ref.current.offsetLeft;
-    const y = event.clientY - ref.current.offsetTop;
+    const { top, left } = ref.current.getBoundingClientRect();
+
+    const x = event.clientX - left;
+    const y = event.clientY - top;
 
     callback({ x, y });
   };
