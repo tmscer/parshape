@@ -142,7 +142,9 @@ export default function Editor() {
     return [...objects, newObject];
   }, [objects, newObject]);
 
-  const [settings, setSettings] = useState(cloneDeep(Settings.DEFAULT_SETTINGS));
+  const [settings, setSettings] = useState(
+    cloneDeep(Settings.DEFAULT_SETTINGS)
+  );
 
   // TODO: Remove
   useEffect(() => {
@@ -151,23 +153,24 @@ export default function Editor() {
 
   return (
     <div>
-      <Stack direction="row" gap={4}>
-        <div>
-        </div>
+      <Stack direction="row" gap={6}>
+        <Stack direction="column" gap={4}>
+          <Toolbar onClick={onToolbarClick} />
+          <UnitContext.Provider value={{ unit: "px" }}>
+            <Canvas
+              width={getHsizePt(settings.hsize)}
+              numLines={settings.numLines}
+              lineSkip={settings.lineskip}
+              baseLineSkip={settings.baselineskip}
+              objects={finalObjects}
+              pointer={newType !== null}
+              onClick={onCanvasClick}
+              onMouseMove={onCanvasMouseOver}
+            />
+          </UnitContext.Provider>
+        </Stack>
         <Settings settings={settings} onChange={setSettings} />
       </Stack>
-      <Toolbar onClick={onToolbarClick} />
-      <UnitContext.Provider value={{ unit: "px" }}>
-        <Canvas
-          width={getHsizePt(settings.hsize)}
-          numLines={settings.numLines}
-          lineSkip={settings.baselineskip}
-          objects={finalObjects}
-          pointer={newType !== null}
-          onClick={onCanvasClick}
-          onMouseMove={onCanvasMouseOver}
-        />
-      </UnitContext.Provider>
     </div>
   );
 }
