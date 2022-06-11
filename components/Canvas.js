@@ -1,11 +1,15 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import Circle from "./Circle";
 import Line from "./Line";
+import ParagraphLine from "./ParagraphLine";
 import { useUnit } from "./UnitContext";
 
 export default function Canvas({
-  size,
+  width,
+  numLines,
+  baseLineSkip,
+  lineSkip,
   objects,
   pointer,
   onClick: onClickOuter,
@@ -28,24 +32,78 @@ export default function Canvas({
     callback({ x, y });
   };
 
+  const lineHeight = baseLineSkip - lineSkip;
+
+  const [lines, setLines] = useState([]);
+
+  useEffect(() => {
+    setLines(arrayOfLen(numLines).map(() => [0, 0]));
+  }, [numLines]);
+
+  const updateLine = (i, line) => {
+    setLines((lines) => {
+      return [...lines.slice(0, i), line, ...lines.slice(i + 1)];
+    });
+  };
+
+  const updateLeft = (i, left) => {
+    const [_, right] = lines[i];
+    const normalizedLeft = Math.max(0, Math.min(left, width - right));
+    updateLine(i, [normalizedLeft, right]);
+  };
+
+  const updateRight = (i, right) => {
+    const [left, _] = lines[i];
+    const normalizedRight = Math.max(0, Math.min(width - left, right));
+    updateLine(i, [left, normalizedRight]);
+  };
+
   return (
-    <div
-      ref={ref}
-      style={{
-        width: unit(size),
-        height: unit(size),
-        backgroundColor: "#ccc",
-        position: "relative",
-        cursor: pointer ? "crosshair" : undefined,
-      }}
-      onClick={createMouseEmitter(onClickOuter)}
-      onMouseMove={createMouseEmitter(onMouseMoveOuter)}
-    >
-      {objects.map((obj, i) => (
-        <Fragment key={i}>{renderObject(obj)}</Fragment>
-      ))}
-    </div>
+    <>
+      <div
+        ref={ref}
+        style={{
+          width: unit(width),
+          height: unit(numLines * baseLineSkip),
+          backgroundColor: "#f3f3f3",
+          position: "relative",
+          cursor: pointer ? "crosshair" : undefined,
+        }}
+        onClick={createMouseEmitter(onClickOuter)}
+        onMouseMove={createMouseEmitter(onMouseMoveOuter)}
+      >
+        {objects.map((obj, i) => (
+          <Fragment key={i}>{renderObject(obj)}</Fragment>
+        ))}
+        {arrayOfLen(numLines).map((i) => (
+          <ParagraphLine
+            key={i}
+            index={i}
+            lineHeight={lineHeight}
+            lineSkip={lineSkip}
+            left={lines.at(i)?.at(0) || 0}
+            right={lines.at(i)?.at(1) || 0}
+            setLeft={(left) => updateLeft(i, left)}
+            setRight={(right) => updateRight(i, right)}
+          />
+        ))}
+      </div>
+      <pre>
+        {`
+\\parshape ${numLines} 
+${lines
+  .map(([left, right]) => {
+    return `  ${left}pt ${width - left - right}pt`;
+  })
+  .join("\n")}            
+        `}
+      </pre>
+    </>
   );
+}
+
+function arrayOfLen(n) {
+  return [...Array(n).keys()];
 }
 
 function renderObject(obj) {
