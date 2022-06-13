@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -29,6 +29,7 @@ export default function Editor() {
   const [objects, setObjects] = useState(INITIAL_STATE);
   const [newType, setNewType] = useState(null);
   const [newObject, setNewObject] = useState(null);
+  const [edge, setEdge] = useState("left");
 
   const clearNew = useCallback(() => {
     setNewType(null);
@@ -155,7 +156,10 @@ export default function Editor() {
     <div>
       <Stack direction="row" gap={6}>
         <Stack direction="column" gap={4}>
-          <Toolbar onClick={onToolbarClick} />
+          <Stack direction="row" gap={4}>
+            <Toolbar onClick={onToolbarClick} />
+            <EdgeButton value={edge} onChange={setEdge} />
+          </Stack>
           <UnitContext.Provider value={{ unit: "px" }}>
             <Canvas
               width={getHsizePt(settings.hsize)}
@@ -172,5 +176,21 @@ export default function Editor() {
         <Settings settings={settings} onChange={setSettings} />
       </Stack>
     </div>
+  );
+}
+
+function EdgeButton({ value, onChange: onChangeOuter }) {
+  const onChange = useCallback(
+    (_event, value) => {
+      onChangeOuter(value);
+    },
+    [onChangeOuter]
+  );
+
+  return (
+    <ToggleButtonGroup value={value} onChange={onChange} exclusive>
+      <ToggleButton value="left">Left edge</ToggleButton>
+      <ToggleButton value="right">Right edge</ToggleButton>
+    </ToggleButtonGroup>
   );
 }
