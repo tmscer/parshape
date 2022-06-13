@@ -2,6 +2,7 @@ import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import useLines from "../hooks/useLines";
 import Canvas from "./Canvas";
 import Settings, { getHsizePt } from "./Settings";
 import Toolbar from "./Toolbar";
@@ -26,7 +27,12 @@ const INITIAL_STATE = [
 ];
 
 export default function Editor() {
+  const [settings, setSettings] = useState(
+    cloneDeep(Settings.DEFAULT_SETTINGS)
+  );
+
   const [objects, setObjects] = useState(INITIAL_STATE);
+  const { lines, updateLine } = useLines({ numLines: settings.numLines });
   const [newType, setNewType] = useState(null);
   const [newObject, setNewObject] = useState(null);
   const [edge, setEdge] = useState("left");
@@ -73,10 +79,6 @@ export default function Editor() {
     return [...objects, newObject];
   }, [objects, newObject]);
 
-  const [settings, setSettings] = useState(
-    cloneDeep(Settings.DEFAULT_SETTINGS)
-  );
-
   // TODO: Remove
   useEffect(() => {
     setObjects([]);
@@ -93,7 +95,8 @@ export default function Editor() {
           <UnitContext.Provider value={{ unit: "px" }}>
             <Canvas
               width={getHsizePt(settings.hsize)}
-              numLines={settings.numLines}
+              lines={lines}
+              updateLine={updateLine}
               lineSkip={settings.lineskip}
               baseLineSkip={settings.baselineskip}
               objects={finalObjects}

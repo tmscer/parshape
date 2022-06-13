@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef } from "react";
 
 import Circle from "./Circle";
 import Line from "./Line";
@@ -7,7 +7,8 @@ import { useUnit } from "./UnitContext";
 
 export default function Canvas({
   width,
-  numLines,
+  lines,
+  updateLine,
   baseLineSkip,
   lineSkip,
   objects,
@@ -34,37 +35,13 @@ export default function Canvas({
 
   const lineHeight = baseLineSkip - lineSkip;
 
-  const [lines, setLines] = useState([]);
-
-  useEffect(() => {
-    setLines(arrayOfLen(numLines).map(() => [0, 0]));
-  }, [numLines]);
-
-  const updateLine = (i, line) => {
-    setLines((lines) => {
-      return [...lines.slice(0, i), line, ...lines.slice(i + 1)];
-    });
-  };
-
-  const updateLeft = (i, left) => {
-    const [_, right] = lines[i];
-    const normalizedLeft = Math.max(0, Math.min(left, width - right));
-    updateLine(i, [normalizedLeft, right]);
-  };
-
-  const updateRight = (i, right) => {
-    const [left, _] = lines[i];
-    const normalizedRight = Math.max(0, Math.min(width - left, right));
-    updateLine(i, [left, normalizedRight]);
-  };
-
   return (
     <>
       <div
         ref={ref}
         style={{
           width: unit(width),
-          height: unit(numLines * baseLineSkip),
+          height: unit(lines.length * baseLineSkip),
           backgroundColor: "#f3f3f3",
           position: "relative",
           cursor: pointer ? "crosshair" : undefined,
@@ -75,22 +52,22 @@ export default function Canvas({
         {objects.map((obj, i) => (
           <Fragment key={i}>{renderObject(obj)}</Fragment>
         ))}
-        {arrayOfLen(numLines).map((i) => (
+        {lines.map((line, i) => (
           <ParagraphLine
             key={i}
             index={i}
             lineHeight={lineHeight}
             lineSkip={lineSkip}
-            left={lines.at(i)?.at(0) || 0}
-            right={lines.at(i)?.at(1) || 0}
-            setLeft={(left) => updateLeft(i, left)}
-            setRight={(right) => updateRight(i, right)}
+            left={line[0]}
+            right={line[1]}
+            setLeft={(left) => updateLine(i, [left, line[1]])}
+            setRight={(right) => updateLine(i, [line[0], right])}
           />
         ))}
       </div>
       <pre>
         {`
-\\parshape ${numLines} 
+\\parshape ${lines.length} 
 ${lines
   .map(([left, right]) => {
     return `  ${left}pt ${width - left - right}pt`;
@@ -100,10 +77,6 @@ ${lines
       </pre>
     </>
   );
-}
-
-function arrayOfLen(n) {
-  return [...Array(n).keys()];
 }
 
 function renderObject(obj) {
