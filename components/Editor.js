@@ -40,88 +40,18 @@ export default function Editor() {
     setNewType(type);
   }, []);
 
-  const onCanvasClick = useCallback(
-    ({ x, y }) => {
-      if (!newType) {
-        return;
-      }
+  const addObject = useCallback((obj) => {
+    setObjects((objs) => [...objs, obj]);
+  }, []);
 
-      if (newType === "line") {
-        if (!newObject) {
-          setNewObject({
-            type: "line",
-            start: [x, y],
-            stop: [x, y],
-          });
-        } else {
-          const finalLine = {
-            ...newObject,
-            stop: [x, y],
-          };
-
-          setObjects((objs) => [...objs, finalLine]);
-          clearNew();
-        }
-      } else if (newType === "circle") {
-        if (!newObject) {
-          setNewObject({
-            type: "circle",
-            center: [x, y],
-            // Some value to be updated later
-            radius: 10,
-          });
-        } else {
-          const dx = x - newObject.center[0];
-          const dy = y - newObject.center[1];
-
-          const finalCircle = {
-            ...newObject,
-            radius: Math.sqrt(dx * dx + dy * dy),
-          };
-
-          setObjects((objs) => [...objs, finalCircle]);
-          clearNew();
-        }
-      }
-    },
-    [newType, newObject, clearNew]
-  );
-
-  const onCanvasMouseOver = useCallback(
-    ({ x, y }) => {
-      if (!newType) {
-        return;
-      }
-
-      if (newType === "line") {
-        setNewObject((newObj) => {
-          if (!newObj) {
-            return newObj;
-          }
-
-          return {
-            ...newObj,
-            stop: [x, y],
-          };
-        });
-      } else if (newType === "circle") {
-        setNewObject((newObj) => {
-          if (!newObj) {
-            return newObj;
-          }
-
-          const dx = x - newObj.center[0];
-          const dy = y - newObj.center[1];
-
-          return {
-            ...newObj,
-            radius: Math.sqrt(dx * dx + dy * dy),
-          };
-        });
-      }
-    },
-    [newType]
-  );
+  const onCanvasClick = useOnCanvasClick({
+    newType,
+    newObject,
+    clearNew,
+    setNewObject,
+    addObject,
+  });
+  const onCanvasMouseOver = useOnCanvasMouseOver({ newType, setNewObject });
 
   useEffect(() => {
     const handler = (event) => {
@@ -193,4 +123,101 @@ function EdgeButton({ value, onChange: onChangeOuter }) {
       <ToggleButton value="right">Right edge</ToggleButton>
     </ToggleButtonGroup>
   );
+}
+
+function useOnCanvasClick({
+  newType,
+  newObject,
+  clearNew,
+  setNewObject,
+  addObject,
+}) {
+  const onCanvasClick = useCallback(
+    ({ x, y }) => {
+      if (!newType) {
+        return;
+      }
+
+      if (newType === "line") {
+        if (!newObject) {
+          setNewObject({
+            type: "line",
+            start: [x, y],
+            stop: [x, y],
+          });
+        } else {
+          const finalLine = {
+            ...newObject,
+            stop: [x, y],
+          };
+
+          addObject(finalLine);
+          clearNew();
+        }
+      } else if (newType === "circle") {
+        if (!newObject) {
+          setNewObject({
+            type: "circle",
+            center: [x, y],
+            // Some value to be updated later
+            radius: 10,
+          });
+        } else {
+          const dx = x - newObject.center[0];
+          const dy = y - newObject.center[1];
+
+          const finalCircle = {
+            ...newObject,
+            radius: Math.sqrt(dx * dx + dy * dy),
+          };
+
+          addObject(finalCircle);
+          clearNew();
+        }
+      }
+    },
+    [newType, newObject, clearNew, setNewObject, addObject]
+  );
+
+  return onCanvasClick;
+}
+
+function useOnCanvasMouseOver({ newType, setNewObject }) {
+  const onCanvasMouseOver = useCallback(
+    ({ x, y }) => {
+      if (!newType) {
+        return;
+      }
+
+      if (newType === "line") {
+        setNewObject((newObj) => {
+          if (!newObj) {
+            return newObj;
+          }
+
+          return {
+            ...newObj,
+            stop: [x, y],
+          };
+        });
+      } else if (newType === "circle") {
+        setNewObject((newObj) => {
+          if (!newObj) {
+            return newObj;
+          }
+
+          const dx = x - newObj.center[0];
+          const dy = y - newObj.center[1];
+
+          return {
+            ...newObj,
+            radius: Math.sqrt(dx * dx + dy * dy),
+          };
+        });
+      }
+    },
+    [newType, setNewObject]
+  );
+
+  return onCanvasMouseOver;
 }
