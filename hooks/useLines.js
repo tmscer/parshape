@@ -1,8 +1,12 @@
 import arrayOfLen from "../utils/arrayOfLen";
 
 import { useEffect, useState } from "react";
+import floatEq from "../utils/floatEq";
+import { isInLineX } from "../utils/isInLine";
 
-export default function useLines({ numLines, width }) {
+export default function useLines(settings) {
+  const { numLines, hsize } = settings;
+
   const [lines, setLines] = useState([]);
 
   useEffect(() => {
@@ -14,21 +18,33 @@ export default function useLines({ numLines, width }) {
   }, [numLines, lines]);
 
   const updateLine = (i, line) => {
+    const normalizedLine = normalizeLine(line, hsize);
+
     setLines((lines) => {
-      return [...lines.slice(0, i), line, ...lines.slice(i + 1)];
+      return [...lines.slice(0, i), normalizedLine, ...lines.slice(i + 1)];
     });
   };
 
   const updateLeft = (i, left) => {
     const [_, right] = lines[i];
-    const normalizedLeft = Math.max(0, Math.min(left, width - right));
-    updateLine(i, [normalizedLeft, right]);
+    updateLine(i, [left, right]);
   };
 
   const updateRight = (i, right) => {
     const [left, _] = lines[i];
-    const normalizedRight = Math.max(0, Math.min(width - left, right));
-    updateLine(i, [left, normalizedRight]);
+    updateLine(i, [left, right]);
+  };
+
+  const applyObject = (obj, edge) => {
+    if (obj.type === "line") {
+      if (edge === "left") {
+        return setLines((lines) => applyLineToLeftEdge(lines, obj, settings));
+      } else if (edge === "right") {
+        return setLines((lines) => applyLineToRightEdge(lines, obj, settings));
+      }
+    }
+
+    throw new Error(`cannot apply object of type "${obj.type}" to the ${edge} edge`);
   };
 
   return {
@@ -36,7 +52,83 @@ export default function useLines({ numLines, width }) {
     updateLine,
     updateLeft,
     updateRight,
+    applyObject,
+    setLines,
   };
+}
+
+function normalizeLine(line, width) {
+  const [left, right] = line;
+
+  const normalizedLeft = Math.max(0, Math.min(left, width - right));
+  const normalizedRight = Math.max(0, Math.min(width - left, right));
+
+  return [normalizedLeft, normalizedRight];
+}
+
+function applyLineToLeftEdge(lines, line, settings) {
+  return lines.map((paragraphLine, i) => {
+    // middle of the paragraph
+    const height = (i + 0.5) * settings.baselineskip;
+
+    const xpos = calculateXPosAtHeight(line, height);
+
+    if (!isInLineX(line, xpos)) {
+      return paragraphLine;
+    }
+
+    const newLeft = Math.max(paragraphLine[0], xpos);
+
+    return [newLeft, paragraphLine[1]];
+  });
+}
+
+function applyLineToRightEdge(lines, line, settings) {
+  return lines.map((paragraphLine, i) => {
+    // middle of the paragraph
+    const height = (i + 0.5) * settings.baselineskip;
+
+    const xpos = calculateXPosAtHeight(line, height);
+
+    if (!isInLineX(line, xpos)) {
+      return paragraphLine;
+    }
+
+    const newRight = settings.hsize - Math.min(settings.hsize - paragraphLine[1], xpos);
+
+    return [paragraphLine[0], newRight];
+  });
+}
+
+function calculateXPosAtHeight(line, height) {
+  const [x1, y1] = line.start;
+  const [x2, y2] = line.stop;
+
+  const isVertical = floatEq(x1, x2);
+
+  if (isVertical) {
+    return line.start[0];
+  }
+
+  const isHorizontal = floatEq(y1, y2);
+
+  if (isHorizontal) {
+    return 0;
+  }
+
+  // A little bit of analytical geometry:
+  const a = (y2 - y1) / (x2 - x1);
+  const b = y1 - a * x1;
+
+  const b2 = y2 - a * x2;
+
+  if (!floatEq(b, b2)) {
+    throw new Error("analytical geometry formula is flawed");
+  }
+
+  const xpos = (height - b) / a;
+
+  return Math.round(xpos * 1e5) / 1e5;
 }
 
 function getNewLines(lines, numLines) {

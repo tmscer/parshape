@@ -50,7 +50,7 @@ export default function Settings({ settings, onChange }) {
 
 Settings.DEFAULT_SETTINGS = Object.freeze({
   numLines: 10,
-  hsize: "a4",
+  hsize: 455.24408,
   baselineskip: 12,
   lineskip: 1,
 });

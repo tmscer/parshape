@@ -32,7 +32,7 @@ export default function Editor() {
   );
 
   const [objects, setObjects] = useState(INITIAL_STATE);
-  const { lines, updateLine } = useLines({ numLines: settings.numLines });
+  const { lines, updateLine, applyObject } = useLines(settings);
   const [newType, setNewType] = useState(null);
   const [newObject, setNewObject] = useState(null);
   const [edge, setEdge] = useState("left");
@@ -46,9 +46,12 @@ export default function Editor() {
     setNewType(type);
   }, []);
 
-  const addObject = useCallback((obj) => {
-    setObjects((objs) => [...objs, obj]);
-  }, []);
+  const addObject = useCallback(
+    (obj) => {
+      applyObject(obj, edge);
+    },
+    [applyObject, edge]
+  );
 
   const onCanvasClick = useOnCanvasClick({
     newType,
