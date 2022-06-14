@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import useLines from "../hooks/useLines";
 import Canvas from "./Canvas";
+import Parshape from "./Parshape";
 import Settings, { getHsizePt } from "./Settings";
 import Toolbar from "./Toolbar";
 import { UnitContext } from "./UnitContext";
@@ -111,6 +112,7 @@ export default function Editor() {
         </Stack>
         <Settings settings={settings} onChange={setSettings} />
       </Stack>
+      <Parshape width={getHsizePt(settings.hsize)} lines={lines} />
     </div>
   );
 }

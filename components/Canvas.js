@@ -36,46 +36,34 @@ export default function Canvas({
   const lineHeight = baseLineSkip - lineSkip;
 
   return (
-    <>
-      <div
-        ref={ref}
-        style={{
-          width: unit(width),
-          height: unit(lines.length * baseLineSkip),
-          backgroundColor: "#f3f3f3",
-          position: "relative",
-          cursor: pointer ? "crosshair" : undefined,
-        }}
-        onClick={createMouseEmitter(onClickOuter)}
-        onMouseMove={createMouseEmitter(onMouseMoveOuter)}
-      >
-        {objects.map((obj, i) => (
-          <Fragment key={i}>{renderObject(obj)}</Fragment>
-        ))}
-        {lines.map((line, i) => (
-          <ParagraphLine
-            key={i}
-            index={i}
-            lineHeight={lineHeight}
-            lineSkip={lineSkip}
-            left={line[0]}
-            right={line[1]}
-            setLeft={(left) => updateLine(i, [left, line[1]])}
-            setRight={(right) => updateLine(i, [line[0], right])}
-          />
-        ))}
-      </div>
-      <pre>
-        {`
-\\parshape ${lines.length} 
-${lines
-  .map(([left, right]) => {
-    return `  ${left}pt ${width - left - right}pt`;
-  })
-  .join("\n")}            
-        `}
-      </pre>
-    </>
+    <div
+      ref={ref}
+      style={{
+        width: unit(width),
+        height: unit(lines.length * baseLineSkip),
+        backgroundColor: "#f3f3f3",
+        position: "relative",
+        cursor: pointer ? "crosshair" : undefined,
+      }}
+      onClick={createMouseEmitter(onClickOuter)}
+      onMouseMove={createMouseEmitter(onMouseMoveOuter)}
+    >
+      {objects.map((obj, i) => (
+        <Fragment key={i}>{renderObject(obj)}</Fragment>
+      ))}
+      {lines.map((line, i) => (
+        <ParagraphLine
+          key={i}
+          index={i}
+          lineHeight={lineHeight}
+          lineSkip={lineSkip}
+          left={line[0]}
+          right={line[1]}
+          setLeft={(left) => updateLine(i, [left, line[1]])}
+          setRight={(right) => updateLine(i, [line[0], right])}
+        />
+      ))}
+    </div>
   );
 }
 
