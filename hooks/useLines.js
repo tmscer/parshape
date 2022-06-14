@@ -35,12 +35,12 @@ export default function useLines(settings) {
     updateLine(i, [left, right]);
   };
 
-  const applyObject = (obj, edge) => {
+  const applyObject = (obj, edge, usedLines = lines) => {
     if (obj.type === "line") {
       if (edge === "left") {
-        return setLines((lines) => applyLineToLeftEdge(lines, obj, settings));
+        return setLines(applyLineToLeftEdge(usedLines, obj, settings));
       } else if (edge === "right") {
-        return setLines((lines) => applyLineToRightEdge(lines, obj, settings));
+        return setLines(applyLineToRightEdge(usedLines, obj, settings));
       }
     }
 

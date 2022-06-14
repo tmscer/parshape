@@ -2,6 +2,7 @@ import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import useHistory from "../hooks/useHistory";
 import useLines from "../hooks/useLines";
 import Canvas from "./Canvas";
 import Parshape from "./Parshape";
@@ -38,6 +39,8 @@ export default function Editor() {
   const [newObject, setNewObject] = useState(null);
   const [edge, setEdge] = useState("left");
 
+  const { current: currentLines, goToPrevious, goToNext } = useHistory(lines);
+
   const clearNew = useCallback(() => {
     setNewType(null);
     setNewObject(null);
@@ -49,9 +52,9 @@ export default function Editor() {
 
   const addObject = useCallback(
     (obj) => {
-      applyObject(obj, edge);
+      applyObject(obj, edge, currentLines);
     },
-    [applyObject, edge]
+    [applyObject, edge, currentLines]
   );
 
   const onCanvasClick = useOnCanvasClick({
@@ -93,13 +96,17 @@ export default function Editor() {
       <Stack direction="row" gap={6}>
         <Stack direction="column" gap={4}>
           <Stack direction="row" gap={4}>
-            <Toolbar onClick={onToolbarClick} />
+            <Toolbar
+              onClick={onToolbarClick}
+              prev={goToPrevious}
+              next={goToNext}
+            />
             <EdgeButton value={edge} onChange={setEdge} />
           </Stack>
           <UnitContext.Provider value={{ unit: "px" }}>
             <Canvas
               width={getHsizePt(settings.hsize)}
-              lines={lines}
+              lines={currentLines}
               updateLine={updateLine}
               lineSkip={settings.lineskip}
               baseLineSkip={settings.baselineskip}

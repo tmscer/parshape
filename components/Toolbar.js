@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Stack } from "@mui/material";
 import { useCallback } from "react";
 
-export default function Toolbar({ onClick }) {
+export default function Toolbar({ onClick, prev, next }) {
   const createOnClick = useCallback(
     (name) => (_event) => {
       onClick(name);
@@ -18,6 +18,8 @@ export default function Toolbar({ onClick }) {
       >
         <ToolbarButton onClick={createOnClick("line")}>line</ToolbarButton>
         {/* <ToolbarButton onClick={createOnClick("circle")}>circle</ToolbarButton> */}
+        <ToolbarButton onClick={() => prev()}>prev</ToolbarButton>
+        <ToolbarButton onClick={() => next()}>next</ToolbarButton>
       </ButtonGroup>
     </Stack>
   );
