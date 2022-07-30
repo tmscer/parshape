@@ -5,7 +5,6 @@ export default function useHistory(value) {
   const [history, setHistory] = useState([value]);
   const [index, setIndex] = useState(0);
   const current = history[index];
-  console.log({ current, value });
 
   const goToPrevious = useCallback(() => {
     setIndex((i) => Math.max(0, i - 1));
@@ -17,11 +16,8 @@ export default function useHistory(value) {
 
   useEffect(() => {
     if (isEqual(current, value) || isEqual(last(history), value)) {
-      console.log("eq");
       return;
     }
-
-    console.log("neq");
 
     setHistory((hist) => {
       const kept = hist.slice(0, index + 1);
