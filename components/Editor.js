@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useHistory from "../hooks/useHistory";
 import useLines from "../hooks/useLines";
 import useOnCanvasClick from "../hooks/useOnCanvasClick";
+import useOnCanvasMouseOver from "../hooks/useOnCanvasMouseOver";
 import Canvas from "./Canvas";
 import EdgeButton from "./EdgeButton";
 import Parshape from "./Parshape";
@@ -124,44 +125,4 @@ export default function Editor() {
       <Parshape width={getHsizePt(settings.hsize)} lines={lines} />
     </div>
   );
-}
-
-function useOnCanvasMouseOver({ newType, setNewObject }) {
-  const onCanvasMouseOver = useCallback(
-    ({ x, y }) => {
-      if (!newType) {
-        return;
-      }
-
-      if (newType === "line") {
-        setNewObject((newObj) => {
-          if (!newObj) {
-            return newObj;
-          }
-
-          return {
-            ...newObj,
-            stop: [x, y],
-          };
-        });
-      } else if (newType === "circle") {
-        setNewObject((newObj) => {
-          if (!newObj) {
-            return newObj;
-          }
-
-          const dx = x - newObj.center[0];
-          const dy = y - newObj.center[1];
-
-          return {
-            ...newObj,
-            radius: Math.sqrt(dx * dx + dy * dy),
-          };
-        });
-      }
-    },
-    [newType, setNewObject]
-  );
-
-  return onCanvasMouseOver;
 }
