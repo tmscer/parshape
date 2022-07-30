@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import arrayOfLen from "../utils/arrayOfLen";
+import calculateLineParamsFromPoints from "../utils/calculateLineParamsFromPoints";
 import floatEq from "../utils/floatEq";
 import { isInLineX } from "../utils/isInLine";
 
@@ -110,7 +111,7 @@ function calculateXPosAtHeight(line, height) {
   const isVertical = floatEq(x1, x2);
 
   if (isVertical) {
-    return line.start[0];
+    return x1;
   }
 
   const isHorizontal = floatEq(y1, y2);
@@ -119,16 +120,7 @@ function calculateXPosAtHeight(line, height) {
     return 0;
   }
 
-  // A little bit of analytical geometry:
-  const a = (y2 - y1) / (x2 - x1);
-  const b = y1 - a * x1;
-
-  const b2 = y2 - a * x2;
-
-  if (!floatEq(b, b2)) {
-    throw new Error("analytical geometry formula is flawed");
-  }
-
+  const { a, b } = calculateLineParamsFromPoints(line.start, line.stop);
   const xpos = (height - b) / a;
 
   return Math.round(xpos * 1e5) / 1e5;
