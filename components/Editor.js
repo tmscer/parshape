@@ -2,6 +2,7 @@ import { Stack } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import useEditorKeybindings from "../hooks/useEditorKeybindings";
 import useHistory from "../hooks/useHistory";
 import useLines from "../hooks/useLines";
 import useOnCanvasClick from "../hooks/useOnCanvasClick";
@@ -69,18 +70,6 @@ export default function Editor() {
   });
   const onCanvasMouseOver = useOnCanvasMouseOver({ newType, setNewObject });
 
-  useEffect(() => {
-    const handler = (event) => {
-      if (event.key === "Escape") {
-        clearNew();
-      }
-    };
-
-    window.addEventListener("keyup", handler);
-
-    return () => window.removeEventListener("keyup", handler);
-  }, [clearNew]);
-
   const finalObjects = useMemo(() => {
     if (!newObject) {
       return objects;
@@ -93,6 +82,8 @@ export default function Editor() {
   useEffect(() => {
     setObjects([]);
   }, [settings]);
+
+  useEditorKeybindings({ prev: goToPrevious, next: goToNext, clearNew });
 
   return (
     <div>
