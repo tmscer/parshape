@@ -29,6 +29,23 @@ export default function useOnCanvasClick({
           addObject(finalLine);
           clearNew();
         }
+      } else if (newType === "fixed-angle-line") {
+        if (!newObject) {
+          setNewObject({
+            type: "line",
+            start: [x, y],
+            stop: [x, y],
+          });
+        } else {
+          // TODO: Set line so that `nearest angle % 15 == 0`
+          const finalLine = {
+            ...newObject,
+            stop: null,
+          };
+
+          addObject(finalLine);
+          clearNew();
+        }
       } else if (newType === "circle") {
         if (!newObject) {
           setNewObject({

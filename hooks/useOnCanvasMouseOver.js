@@ -18,6 +18,12 @@ export default function useOnCanvasMouseOver({ newType, setNewObject }) {
             stop: [x, y],
           };
         });
+      } else if (newType === "fixed-angle-line") {
+        setNewObject((newObj) => {
+          // TODO: Update line so that `nearest angle % 15 == 0`
+
+          return newObj;
+        });
       } else if (newType === "circle") {
         setNewObject((newObj) => {
           if (!newObj) {
