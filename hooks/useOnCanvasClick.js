@@ -1,5 +1,8 @@
 import { useCallback } from "react";
 
+import { degToRad } from "../utils/degRadConversion";
+import snapLineToAngle from "../utils/snapLineToAngle";
+
 export default function useOnCanvasClick({
   newType,
   newObject,
@@ -37,10 +40,9 @@ export default function useOnCanvasClick({
             stop: [x, y],
           });
         } else {
-          // TODO: Set line so that `nearest angle % 15 == 0`
           const finalLine = {
             ...newObject,
-            stop: null,
+            stop: snapLineToAngle(newObject.start, [x, y], degToRad(15))[1],
           };
 
           addObject(finalLine);
