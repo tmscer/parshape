@@ -1,10 +1,11 @@
-import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Stack } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import useHistory from "../hooks/useHistory";
 import useLines from "../hooks/useLines";
 import Canvas from "./Canvas";
+import EdgeButton from "./EdgeButton";
 import Parshape from "./Parshape";
 import Settings, { getHsizePt } from "./Settings";
 import Toolbar from "./Toolbar";
@@ -121,22 +122,6 @@ export default function Editor() {
       </Stack>
       <Parshape width={getHsizePt(settings.hsize)} lines={lines} />
     </div>
-  );
-}
-
-function EdgeButton({ value, onChange: onChangeOuter }) {
-  const onChange = useCallback(
-    (_event, value) => {
-      onChangeOuter(value);
-    },
-    [onChangeOuter]
-  );
-
-  return (
-    <ToggleButtonGroup value={value} onChange={onChange} exclusive>
-      <ToggleButton value="left">Left edge</ToggleButton>
-      <ToggleButton value="right">Right edge</ToggleButton>
-    </ToggleButtonGroup>
   );
 }
 
