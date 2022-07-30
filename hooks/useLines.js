@@ -1,6 +1,6 @@
-import arrayOfLen from "../utils/arrayOfLen";
-
 import { useEffect, useState } from "react";
+
+import arrayOfLen from "../utils/arrayOfLen";
 import floatEq from "../utils/floatEq";
 import { isInLineX } from "../utils/isInLine";
 
@@ -44,7 +44,9 @@ export default function useLines(settings) {
       }
     }
 
-    throw new Error(`cannot apply object of type "${obj.type}" to the ${edge} edge`);
+    throw new Error(
+      `cannot apply object of type "${obj.type}" to the ${edge} edge`
+    );
   };
 
   return {
@@ -94,7 +96,8 @@ function applyLineToRightEdge(lines, line, settings) {
       return paragraphLine;
     }
 
-    const newRight = settings.hsize - Math.min(settings.hsize - paragraphLine[1], xpos);
+    const newRight =
+      settings.hsize - Math.min(settings.hsize - paragraphLine[1], xpos);
 
     return [paragraphLine[0], newRight];
   });
@@ -144,5 +147,5 @@ function getNewLines(lines, numLines) {
 }
 
 function linesOfLength(n) {
-  return arrayOfLen(n).map(() => [0, 0])
+  return arrayOfLen(n).map(() => [0, 0]);
 }
