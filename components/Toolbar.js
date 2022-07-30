@@ -17,6 +17,9 @@ export default function Toolbar({ onClick, prev, next }) {
         sx={{ flexWrap: "wrap" }}
       >
         <ToolbarButton onClick={createOnClick("line")}>line</ToolbarButton>
+        <ToolbarButton onClick={createOnClick("snap-angle-line")}>
+          snap angle line
+        </ToolbarButton>
         {/* <ToolbarButton onClick={createOnClick("circle")}>circle</ToolbarButton> */}
         <ToolbarButton onClick={() => prev()}>prev</ToolbarButton>
         <ToolbarButton onClick={() => next()}>next</ToolbarButton>
