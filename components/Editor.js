@@ -113,7 +113,7 @@ export default function Editor() {
         </Stack>
         <Settings settings={settings} onChange={setSettings} />
       </Stack>
-      <Parshape width={getHsizePt(settings.hsize)} lines={lines} />
+      <Parshape width={getHsizePt(settings.hsize)} lines={currentLines} />
     </div>
   );
 }
