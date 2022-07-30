@@ -1,5 +1,8 @@
 import { useCallback } from "react";
 
+import { degToRad } from "../utils/degRadConversion";
+import snapLineToAngle from "../utils/snapLineToAngle";
+
 export default function useOnCanvasClick({
   newType,
   newObject,
@@ -24,6 +27,22 @@ export default function useOnCanvasClick({
           const finalLine = {
             ...newObject,
             stop: [x, y],
+          };
+
+          addObject(finalLine);
+          clearNew();
+        }
+      } else if (newType === "snap-angle-line") {
+        if (!newObject) {
+          setNewObject({
+            type: "line",
+            start: [x, y],
+            stop: [x, y],
+          });
+        } else {
+          const finalLine = {
+            ...newObject,
+            stop: snapLineToAngle(newObject.start, [x, y], degToRad(15))[1],
           };
 
           addObject(finalLine);
