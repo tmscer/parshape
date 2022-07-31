@@ -95,7 +95,9 @@ export default function Editor() {
               prev={goToPrevious}
               next={goToNext}
             />
-            <EdgeButton value={edge} onChange={setEdge} />
+            <Stack sx={{ mt: 2 }}>
+              <EdgeButton value={edge} onChange={setEdge} />
+            </Stack>
           </Stack>
           <UnitContext.Provider value={{ unit: "px" }}>
             <Canvas
