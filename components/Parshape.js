@@ -1,9 +1,17 @@
+import { Stack } from "@mui/material";
+
 import floatEq from "../utils/floatEq";
+import CopyToClipboardButton from "./CopyToClipboardButton";
 
 export default function Parshape({ lines, width }) {
   const parshape = createParshapeFromLines(lines, width);
 
-  return <pre>{parshape}</pre>;
+  return (
+    <Stack direction="row" gap={4} alignItems="flex-start">
+      <pre>{parshape}</pre>
+      <CopyToClipboardButton value={parshape} />
+    </Stack>
+  );
 }
 
 function createParshapeFromLines(lines, width) {
