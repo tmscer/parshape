@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import { cloneDeep } from "lodash";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
 import useEditorKeybindings from "../hooks/useEditorKeybindings";
 import useHistory from "../hooks/useHistory";
@@ -14,30 +14,11 @@ import Settings, { getHsizePt } from "./Settings";
 import Toolbar from "./Toolbar";
 import { UnitContext } from "./UnitContext";
 
-const INITIAL_STATE = [
-  {
-    type: "line",
-    start: [10, 200],
-    stop: [400, 50],
-  },
-  {
-    type: "line",
-    start: [100, 200],
-    stop: [100, 0],
-  },
-  {
-    type: "circle",
-    center: [72, 300],
-    radius: 99,
-  },
-];
-
 export default function Editor() {
   const [settings, setSettings] = useState(
     cloneDeep(Settings.DEFAULT_SETTINGS)
   );
 
-  const [objects, setObjects] = useState(INITIAL_STATE);
   const { lines, updateLine, applyObject } = useLines(settings);
   const [newType, setNewType] = useState(null);
   const [newObject, setNewObject] = useState(null);
@@ -70,19 +51,6 @@ export default function Editor() {
   });
   const onCanvasMouseOver = useOnCanvasMouseOver({ newType, setNewObject });
 
-  const finalObjects = useMemo(() => {
-    if (!newObject) {
-      return objects;
-    }
-
-    return [...objects, newObject];
-  }, [objects, newObject]);
-
-  // TODO: Remove
-  useEffect(() => {
-    setObjects([]);
-  }, [settings]);
-
   useEditorKeybindings({ prev: goToPrevious, next: goToNext, clearNew });
 
   return (
@@ -106,7 +74,7 @@ export default function Editor() {
               updateLine={updateLine}
               lineSkip={settings.lineskip}
               baseLineSkip={settings.baselineskip}
-              objects={finalObjects}
+              objects={newObject ? [newObject] : []}
               pointer={newType !== null}
               onClick={onCanvasClick}
               onMouseMove={onCanvasMouseOver}
