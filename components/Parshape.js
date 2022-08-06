@@ -1,34 +1,54 @@
-import { Stack } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
+import { useMemo } from "react";
 
+import useClampedNumber from "../hooks/useClampedNumber";
 import floatEq from "../utils/floatEq";
 import CopyToClipboardButton from "./CopyToClipboardButton";
 
+const DEFAULT_ROUNDING = 3;
+const MAX_ROUNDING = 5;
+
 export default function Parshape({ lines, width }) {
-  const parshape = createParshapeFromLines(lines, width);
+  const [rounding, setRounding] = useRounding(DEFAULT_ROUNDING, MAX_ROUNDING);
+  const parshape = useMemo(
+    () => createParshapeFromLines(lines, { width, rounding }),
+    [lines, width, rounding]
+  );
 
   return (
     <Stack direction="row" gap={4} alignItems="flex-start">
-      <pre>{parshape}</pre>
-      <CopyToClipboardButton value={parshape} />
+      <Stack direction="column" gap={4}>
+        <CopyToClipboardButton value={parshape} />
+        <TextField
+          value={rounding}
+          onChange={(e) => setRounding(+e.target.value)}
+          label={`rounding (max ${MAX_ROUNDING} decimals)`}
+          type="number"
+        />
+      </Stack>
+      <div style={{ width: "200px" }}>
+        <pre>{parshape}</pre>
+      </div>
     </Stack>
   );
 }
 
-function createParshapeFromLines(lines, width) {
+function createParshapeFromLines(lines, { width, rounding }) {
   const header = `\\parshape ${lines.length}`;
 
+  const rounder = (value) => round(value, rounding);
   const prependSpaces = createPrependSpaces(2);
 
   const body = lines
-    .map((line) => serializeLine(line, width))
+    .map((line) => serializeLine(line, { width, rounder }))
     .map(prependSpaces)
     .join("\n");
 
   return `${header}\n${body}`;
 }
 
-function serializeLine(line, width) {
-  const [left, fromRight] = line.map(round);
+function serializeLine(line, { width, rounder }) {
+  const [left, fromRight] = line;
   const length = width - left - fromRight;
 
   const theWholeLine = floatEq(left, 0) && floatEq(length, width);
@@ -37,11 +57,12 @@ function serializeLine(line, width) {
     return "0pt \\hsize";
   }
 
-  return `${left}pt ${length}pt`;
+  return `${rounder(left)}pt ${rounder(length)}pt`;
 }
 
-function round(num) {
-  return Math.round(num * 1e5) / 1e5;
+function round(num, decimals) {
+  const powOfTen = Math.pow(10, decimals);
+  return Math.round(num * powOfTen) / powOfTen;
 }
 
 function createPrependSpaces(numSpaces) {
@@ -50,4 +71,8 @@ function createPrependSpaces(numSpaces) {
   return function prependSpaces(str) {
     return `${spaces}${str}`;
   };
+}
+
+function useRounding(defaultRounding, maxValue) {
+  return useClampedNumber(defaultRounding, 0, maxValue);
 }
