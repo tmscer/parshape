@@ -1,6 +1,6 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import { IconButton, InputAdornment, MenuItem, TextField } from "@mui/material";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const CUSTOM_VALUE = "__custom_value__";
 
@@ -10,6 +10,24 @@ export default function SelectWithCustomValue({
   options,
   ...props
 }) {
+  const inputRef = useRef();
+  const [focusOnCustom, setFocusOnCustom] = useState(false);
+
+  // We cannot autofocus when we call `_setValue` in `setCustom`
+  // because that changes `<TestField />`'s prop `select` which causes
+  // the `<TextField />` to replace the current input -- we lose the current ref.
+  // We focus after the change which also allows our parent component
+  // to reject the switch to a custom value if it wants to. That means this
+  // is always a controllable component.
+  useEffect(() => {
+    if (!inputRef.current || !focusOnCustom || !custom) {
+      return;
+    }
+
+    inputRef.current.focus();
+    setFocusOnCustom(false);
+  }, [inputRef, focusOnCustom, custom]);
+
   const getLabel = useCallback(
     (value) => options.find((option) => option.value === value)?.label,
     [options]
@@ -18,6 +36,7 @@ export default function SelectWithCustomValue({
   const setCustom = useCallback(
     (value = 0) => {
       _setValue({ value, custom: true });
+      setFocusOnCustom(true);
     },
     [_setValue]
   );
@@ -50,6 +69,7 @@ export default function SelectWithCustomValue({
 
   return (
     <TextField
+      inputRef={inputRef}
       select={!custom}
       value={value}
       onChange={setValue}
