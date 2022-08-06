@@ -1,4 +1,4 @@
-import { Stack, TextField } from "@mui/material";
+import { Stack, TextField, Typography } from "@mui/material";
 
 export default function Settings({ settings, onChange }) {
   const { numLines, hsize, baselineskip, lineskip } = settings;
@@ -18,6 +18,7 @@ export default function Settings({ settings, onChange }) {
 
   return (
     <Stack direction="column" gap={2}>
+      <Typography variant="h4">Settings</Typography>
       <TextField
         helperText="Number of lines"
         variant="outlined"
