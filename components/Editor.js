@@ -10,7 +10,7 @@ import useOnCanvasMouseOver from "../hooks/useOnCanvasMouseOver";
 import Canvas from "./Canvas";
 import EdgeButton from "./EdgeButton";
 import Parshape from "./Parshape";
-import Settings, { getHsizePt } from "./Settings";
+import Settings from "./Settings";
 import Toolbar from "./Toolbar";
 import { UnitContext } from "./UnitContext";
 
@@ -69,7 +69,7 @@ export default function Editor() {
           </Stack>
           <UnitContext.Provider value={{ unit: "px" }}>
             <Canvas
-              width={getHsizePt(settings.hsize)}
+              width={settings.hsize}
               lines={currentLines}
               updateLine={updateLine}
               lineSkip={settings.lineskip}
@@ -83,7 +83,7 @@ export default function Editor() {
         </Stack>
         <Settings settings={settings} onChange={setSettings} />
       </Stack>
-      <Parshape width={getHsizePt(settings.hsize)} lines={currentLines} />
+      <Parshape width={settings.hsize} lines={currentLines} />
     </div>
   );
 }

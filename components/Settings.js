@@ -1,9 +1,9 @@
 import { Stack, TextField, Typography } from "@mui/material";
 
-export default function Settings({ settings, onChange }) {
-  const { numLines, hsize, baselineskip, lineskip } = settings;
+import HsizeSelect from "./HsizeSelect";
 
-  const hsizePt = getHsizePt(hsize);
+export default function Settings({ settings, onChange }) {
+  const { numLines, hsize, hsizeCustom, baselineskip, lineskip } = settings;
 
   const createUpdate =
     (key, valueMapper = identity) =>
@@ -26,12 +26,17 @@ export default function Settings({ settings, onChange }) {
         value={numLines}
         onChange={createUpdate("numLines", convertToInt)}
       />
-      {/* TODO: Manual PT input and predefined array of options */}
-      <TextField
+      <HsizeSelect
+        value={{ value: hsize, custom: Boolean(hsizeCustom) }}
+        setValue={({ value, custom }) =>
+          onChange({
+            ...settings,
+            hsize: value,
+            hsizeCustom: custom,
+          })
+        }
         helperText="hsize"
         variant="outlined"
-        value={hsizePt}
-        onChange={createUpdate("hsize", convertToFloat)}
       />
       <TextField
         helperText="baselineskip"
@@ -52,26 +57,10 @@ export default function Settings({ settings, onChange }) {
 Settings.DEFAULT_SETTINGS = Object.freeze({
   numLines: 10,
   hsize: 455.24408,
+  hsizeCustom: false,
   baselineskip: 12,
   lineskip: 1,
 });
-
-Settings.OPTIONS = Object.freeze({
-  hsize: {
-    predefined: {
-      a4: 455.24408,
-      // TODO: More predefined
-    },
-  },
-});
-
-export function getHsizePt(hsize) {
-  if (typeof hsize === "string") {
-    return Settings.OPTIONS.hsize.predefined[hsize];
-  }
-
-  return hsize;
-}
 
 function identity(value) {
   return value;
