@@ -32,6 +32,10 @@ function createKeyListener({ prev, next, clearNew }) {
   }
 
   return function keyListener(event) {
+    if (event?.target.tagName.toLowerCase() !== "body") {
+      return;
+    }
+
     Object.keys(bindings).find((hotkey) => doesHotkeyMatch(event, hotkey));
   };
 }
