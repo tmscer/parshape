@@ -6,11 +6,9 @@ import ParagraphLine from "./ParagraphLine";
 import { useUnit } from "./UnitContext";
 
 export default function Canvas({
-  width,
+  settings,
   lines,
   updateLine,
-  baseLineSkip,
-  lineSkip,
   objects,
   pointer,
   onClick: onClickOuter,
@@ -27,42 +25,51 @@ export default function Canvas({
 
     const { top, left } = ref.current.getBoundingClientRect();
 
-    const x = event.clientX - left;
-    const y = event.clientY - top;
+    const x = event.clientX - left - settings.hoffset;
+    const y = event.clientY - top - settings.voffset;
 
     callback({ x, y });
   };
 
-  const lineHeight = baseLineSkip - lineSkip;
+  const lineHeight = settings.baselineskip - settings.lineskip;
 
   return (
     <div
       ref={ref}
       style={{
-        width: unit(width),
-        height: unit(lines.length * baseLineSkip),
+        width: unit(settings.pageWidth),
+        height: unit(settings.pageHeight),
+        paddingLeft: unit(settings.hoffset),
+        paddingTop: unit(settings.voffset),
+        paddingRight: unit(
+          settings.pageWidth - settings.hsize - settings.hoffset
+        ),
         backgroundColor: "#f3f3f3",
-        position: "relative",
         cursor: pointer ? "crosshair" : undefined,
+        border: "1px solid black",
       }}
       onClick={createMouseEmitter(onClickOuter)}
       onMouseMove={createMouseEmitter(onMouseMoveOuter)}
     >
-      {objects.map((obj, i) => (
-        <Fragment key={i}>{renderObject(obj)}</Fragment>
-      ))}
-      {lines.map((line, i) => (
-        <ParagraphLine
-          key={i}
-          index={i}
-          lineHeight={lineHeight}
-          lineSkip={lineSkip}
-          left={line[0]}
-          right={line[1]}
-          setLeft={(left) => updateLine(i, [left, line[1]])}
-          setRight={(right) => updateLine(i, [line[0], right])}
-        />
-      ))}
+      <div style={{ position: "relative" }}>
+        {objects.map((obj, i) => (
+          <Fragment key={i}>{renderObject(obj)}</Fragment>
+        ))}
+      </div>
+      <div style={{ position: "relative" }}>
+        {lines.map((line, i) => (
+          <ParagraphLine
+            key={i}
+            index={i}
+            lineHeight={lineHeight}
+            lineSkip={settings.lineskip}
+            left={line[0]}
+            right={line[1]}
+            setLeft={(left) => updateLine(i, [left, line[1]])}
+            setRight={(right) => updateLine(i, [line[0], right])}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,9 +1,27 @@
 import { Stack, TextField, Typography } from "@mui/material";
 
-import HsizeSelect from "./HsizeSelect";
+import findOptionById from "../utils/findOptionById";
+import PageHeightField, {
+  OPTIONS as PAGE_HEIGHT_OPTIONS,
+} from "./PageHeightField";
+import PageWidthField, {
+  OPTIONS as PAGE_WIDTH_OPTIONS,
+} from "./PageWidthField";
 
 export default function Settings({ settings, onChange }) {
-  const { numLines, hsize, hsizeCustom, baselineskip, lineskip } = settings;
+  const {
+    numLines,
+    pageWidth,
+    pageWidthCustom,
+    pageHeight,
+    pageHeightCustom,
+    baselineskip,
+    lineskip,
+    hoffset,
+    voffset,
+    hsize,
+    vsize,
+  } = settings;
 
   function createUpdate(key, valueMapper = identity) {
     return (event) => {
@@ -26,17 +44,53 @@ export default function Settings({ settings, onChange }) {
         value={numLines}
         onChange={createUpdate("numLines", convertToInt)}
       />
-      <HsizeSelect
-        value={{ value: hsize, custom: Boolean(hsizeCustom) }}
+      <PageWidthField
+        value={{ value: pageWidth, custom: Boolean(pageWidthCustom) }}
         setValue={({ value, custom }) =>
           onChange({
             ...settings,
-            hsize: value,
-            hsizeCustom: custom,
+            pageWidth: value,
+            pageWidthCustom: custom,
           })
         }
+        helperText="page width"
+        variant="outlined"
+      />
+      <PageHeightField
+        value={{ value: pageHeight, custom: Boolean(pageHeightCustom) }}
+        setValue={({ value, custom }) =>
+          onChange({
+            ...settings,
+            pageHeight: value,
+            pageHeightCustom: custom,
+          })
+        }
+        helperText="page height"
+        variant="outlined"
+      />
+      <TextField
+        helperText="hoffset + pdfhorigin"
+        variant="outlined"
+        value={hoffset}
+        onChange={createUpdate("hoffset", convertToFloat)}
+      />
+      <TextField
+        helperText="voffset + pdfvorigin"
+        variant="outlined"
+        value={voffset}
+        onChange={createUpdate("voffset", convertToFloat)}
+      />
+      <TextField
         helperText="hsize"
         variant="outlined"
+        value={hsize}
+        onChange={createUpdate("hsize", convertToFloat)}
+      />
+      <TextField
+        helperText="vsize"
+        variant="outlined"
+        value={vsize}
+        onChange={createUpdate("vsize", convertToFloat)}
       />
       <TextField
         helperText="baselineskip"
@@ -56,10 +110,16 @@ export default function Settings({ settings, onChange }) {
 
 Settings.DEFAULT_SETTINGS = Object.freeze({
   numLines: 10,
-  hsize: 455.24408,
-  hsizeCustom: false,
+  pageWidth: findOptionById(PAGE_WIDTH_OPTIONS, "a4").value,
+  pageWidthCustom: false,
+  pageHeight: findOptionById(PAGE_HEIGHT_OPTIONS, "a4").value,
+  pageHeightCustom: false,
   baselineskip: 12,
   lineskip: 1,
+  hoffset: 72,
+  voffset: 72,
+  hsize: 455.24408,
+  vsize: 694.24724,
 });
 
 function identity(value) {

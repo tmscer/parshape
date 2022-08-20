@@ -4,11 +4,13 @@ import SelectWithCustomValue from "./SelectWithCustomValue";
 
 export const OPTIONS = [
   {
-    value: 455.24408,
+    id: "a4",
+    value: 694.24724,
     label: "a4",
   },
   {
-    value: 455.24408 / Math.SQRT2,
+    id: "a5",
+    value: 694.24724 / Math.SQRT2,
     label: "a5",
   },
 ];

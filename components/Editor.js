@@ -69,11 +69,9 @@ export default function Editor() {
           </Stack>
           <UnitContext.Provider value={{ unit: "px" }}>
             <Canvas
-              width={settings.hsize}
+              settings={settings}
               lines={currentLines}
               updateLine={updateLine}
-              lineSkip={settings.lineskip}
-              baseLineSkip={settings.baselineskip}
               objects={newObject ? [newObject] : []}
               pointer={newType !== null}
               onClick={onCanvasClick}
