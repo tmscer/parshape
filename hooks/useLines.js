@@ -8,7 +8,7 @@ import { isInLineX } from "../utils/isInLine";
 export default function useLines(settings) {
   const { numLines, hsize } = settings;
 
-  const [lines, setLines] = useState([]);
+  const [lines, setLines] = useState(() => getNewLines([], numLines));
 
   useEffect(() => {
     if (lines.length === numLines) {
