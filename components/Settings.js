@@ -5,9 +5,8 @@ import HsizeSelect from "./HsizeSelect";
 export default function Settings({ settings, onChange }) {
   const { numLines, hsize, hsizeCustom, baselineskip, lineskip } = settings;
 
-  const createUpdate =
-    (key, valueMapper = identity) =>
-    (event) => {
+  function createUpdate(key, valueMapper = identity) {
+    return (event) => {
       const newSettings = {
         ...settings,
         [key]: valueMapper(event.target.value),
@@ -15,6 +14,7 @@ export default function Settings({ settings, onChange }) {
 
       onChange(newSettings);
     };
+  }
 
   return (
     <Stack direction="column" gap={2}>
