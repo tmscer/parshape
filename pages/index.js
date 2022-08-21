@@ -37,7 +37,7 @@ export default function Home() {
         }
 
         main {
-          padding: 5rem 0;
+          padding-top: 2rem;
           flex: 1;
           flex-direction: column;
           justify-content: center;
