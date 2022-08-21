@@ -12,6 +12,7 @@ const MAX_ROUNDING = 5;
 export default function Parshape({ lines, width }) {
   const [rounding, setRounding] = useRounding(DEFAULT_ROUNDING, MAX_ROUNDING);
   const [lastLineIsFullLine, setLastLineIsFullLine] = useState(false);
+  const [noIndent, setNoIndent] = useState(true);
 
   const augmentedLines = useMemo(() => {
     if (lastLineIsFullLine) {
@@ -26,14 +27,25 @@ export default function Parshape({ lines, width }) {
     [augmentedLines, width, rounding]
   );
 
+  const parshapeWithDetails = useMemo(() => {
+    if (noIndent) {
+      return `${parshape}\n\\noindent`;
+    }
+
+    return parshape;
+  }, [parshape, noIndent]);
+
   return (
     <Stack direction="row" gap={4} alignItems="flex-start">
       <Stack direction="column" gap={4}>
-        <CopyToClipboardButton value={parshape} />
-        <LastLineIsFullLineCheckBox
-          checked={lastLineIsFullLine}
-          onChange={setLastLineIsFullLine}
-        />
+        <CopyToClipboardButton value={parshapeWithDetails} />
+        <div>
+          <NoIndentCheckBox checked={noIndent} onChange={setNoIndent} />
+          <LastLineIsFullLineCheckBox
+            checked={lastLineIsFullLine}
+            onChange={setLastLineIsFullLine}
+          />
+        </div>
         <RoundingField
           value={rounding}
           onChange={setRounding}
@@ -41,10 +53,14 @@ export default function Parshape({ lines, width }) {
         />
       </Stack>
       <div style={{ width: "200px" }}>
-        <pre>{parshape}</pre>
+        <pre>{parshapeWithDetails}</pre>
       </div>
     </Stack>
   );
+}
+
+function NoIndentCheckBox(props) {
+  return <LabeledCheckbox {...props} label="Add \noindent" />;
 }
 
 function LastLineIsFullLineCheckBox(props) {
