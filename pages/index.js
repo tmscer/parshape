@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Image from "next/image";
 
 import Editor from "../components/Editor";
 
@@ -21,6 +22,22 @@ export default function Home() {
       <main>
         <Editor />
       </main>
+
+      <footer>
+        See code on{" "}
+        <a
+          href="https://github.com/tmscer/parshape"
+          title="GitHub link"
+          style={{ marginLeft: "0.45em" }}
+        >
+          <Image
+            width="30"
+            height="30"
+            src="/GitHub-Mark-120px-plus.png"
+            alt="GitHub logo"
+          />
+        </a>
+      </footer>
 
       <style jsx>{`
         .container {
