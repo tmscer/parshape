@@ -1,24 +1,39 @@
 import { Stack, TextField } from "@mui/material";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import useClampedNumber from "../hooks/useClampedNumber";
 import floatEq from "../utils/floatEq";
 import CopyToClipboardButton from "./CopyToClipboardButton";
+import LabeledCheckbox from "./LabeledCheckbox";
 
 const DEFAULT_ROUNDING = 3;
 const MAX_ROUNDING = 5;
 
 export default function Parshape({ lines, width }) {
   const [rounding, setRounding] = useRounding(DEFAULT_ROUNDING, MAX_ROUNDING);
+  const [lastLineIsFullLine, setLastLineIsFullLine] = useState(false);
+
+  const augmentedLines = useMemo(() => {
+    if (lastLineIsFullLine) {
+      return [...lines, [0, 0]];
+    }
+
+    return lines;
+  }, [lines, lastLineIsFullLine]);
+
   const parshape = useMemo(
-    () => createParshapeFromLines(lines, { width, rounding }),
-    [lines, width, rounding]
+    () => createParshapeFromLines(augmentedLines, { width, rounding }),
+    [augmentedLines, width, rounding]
   );
 
   return (
     <Stack direction="row" gap={4} alignItems="flex-start">
       <Stack direction="column" gap={4}>
         <CopyToClipboardButton value={parshape} />
+        <LastLineIsFullLineCheckBox
+          checked={lastLineIsFullLine}
+          onChange={setLastLineIsFullLine}
+        />
         <RoundingField
           value={rounding}
           onChange={setRounding}
@@ -30,6 +45,10 @@ export default function Parshape({ lines, width }) {
       </div>
     </Stack>
   );
+}
+
+function LastLineIsFullLineCheckBox(props) {
+  return <LabeledCheckbox {...props} label="Last line is full" />;
 }
 
 function RoundingField({ value, onChange, maxRounding }) {
