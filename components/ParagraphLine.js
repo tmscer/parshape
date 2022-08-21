@@ -28,7 +28,7 @@ export default function ParagraphLine({
         top: unit(index * (lineHeight + lineSkip)),
         width: "100%",
         height: unit(lineHeight),
-        backgroundColor: "#00000033",
+        backgroundColor: "#bbb",
         zIndex: 100,
       }}
     >
@@ -99,9 +99,8 @@ function Draggable({ left, right, onDrag: onDragOuter, children }) {
         {`
           .slider {
             position: absolute;
-            background-color: #f3f3f3;
+            background-color: #fbfbe2;
             cursor: ew-resize;
-            opacity: 0.5;
             top: 0;
             bottom: 0;
             transition: all 0.2s;

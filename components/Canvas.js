@@ -44,9 +44,9 @@ export default function Canvas({
         paddingRight: unit(
           settings.pageWidth - settings.hsize - settings.hoffset
         ),
-        backgroundColor: "#f3f3f3",
+        backgroundColor: "#fbfbe2",
         cursor: pointer ? "crosshair" : undefined,
-        border: "1px solid black",
+        border: "1px solid grey",
       }}
       onClick={createMouseEmitter(onClickOuter)}
       onMouseMove={createMouseEmitter(onMouseMoveOuter)}
@@ -56,7 +56,15 @@ export default function Canvas({
           <Fragment key={i}>{renderObject(obj)}</Fragment>
         ))}
       </div>
-      <div style={{ position: "relative" }}>
+      <div
+        style={{
+          position: "relative",
+          width: unit(settings.hsize),
+          height: unit(settings.pageHeight - 2 * settings.voffset),
+          borderLeft: "1px solid grey",
+          borderRight: "1px solid grey",
+        }}
+      >
         {lines.map((line, i) => (
           <ParagraphLine
             key={i}
