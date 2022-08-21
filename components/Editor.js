@@ -55,7 +55,7 @@ export default function Editor() {
 
   return (
     <div>
-      <Stack direction="row" gap={6}>
+      <Stack direction="row" gap={6} sx={{ mb: 6 }}>
         <Stack direction="column" gap={4}>
           <Stack direction="row" gap={4}>
             <Toolbar
