@@ -20,7 +20,6 @@ export default function Settings({ settings, onChange }) {
     hoffset,
     voffset,
     hsize,
-    vsize,
   } = settings;
 
   function createUpdate(key, valueMapper = identity) {
@@ -87,12 +86,6 @@ export default function Settings({ settings, onChange }) {
         onChange={createUpdate("hsize", convertToFloat)}
       />
       <TextField
-        helperText="vsize"
-        variant="outlined"
-        value={vsize}
-        onChange={createUpdate("vsize", convertToFloat)}
-      />
-      <TextField
         helperText="baselineskip"
         variant="outlined"
         value={baselineskip}
@@ -119,7 +112,6 @@ Settings.DEFAULT_SETTINGS = Object.freeze({
   hoffset: 72,
   voffset: 72,
   hsize: 455.24408,
-  vsize: 694.24724,
 });
 
 function identity(value) {
