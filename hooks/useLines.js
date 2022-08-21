@@ -71,9 +71,7 @@ function normalizeLine(line, width) {
 
 function applyLineToLeftEdge(lines, line, settings) {
   return lines.map((paragraphLine, i) => {
-    // middle of the paragraph
-    const ypos = (i + 0.5) * settings.baselineskip;
-    const xpos = calculateXPosAtHeight(line, ypos);
+    const [xpos, ypos] = xposAndYpos(line, settings.baselineskip, i);
 
     if (!isInLine(line, [xpos, ypos])) {
       return paragraphLine;
@@ -87,9 +85,7 @@ function applyLineToLeftEdge(lines, line, settings) {
 
 function applyLineToRightEdge(lines, line, settings) {
   return lines.map((paragraphLine, i) => {
-    // middle of the paragraph
-    const ypos = (i + 0.5) * settings.baselineskip;
-    const xpos = calculateXPosAtHeight(line, ypos);
+    const [xpos, ypos] = xposAndYpos(line, settings.baselineskip, i);
 
     if (!isInLine(line, [xpos, ypos])) {
       return paragraphLine;
@@ -100,6 +96,14 @@ function applyLineToRightEdge(lines, line, settings) {
 
     return [paragraphLine[0], newRight];
   });
+}
+
+function xposAndYpos(line, baselineskip, lineNum) {
+  // middle of the paragraph
+  const ypos = (lineNum + 0.5) * baselineskip;
+  const xpos = calculateXPosAtHeight(line, ypos);
+
+  return [xpos, ypos];
 }
 
 function calculateXPosAtHeight(line, height) {
