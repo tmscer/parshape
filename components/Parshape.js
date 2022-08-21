@@ -19,17 +19,27 @@ export default function Parshape({ lines, width }) {
     <Stack direction="row" gap={4} alignItems="flex-start">
       <Stack direction="column" gap={4}>
         <CopyToClipboardButton value={parshape} />
-        <TextField
+        <RoundingField
           value={rounding}
-          onChange={(e) => setRounding(+e.target.value)}
-          label={`rounding (max ${MAX_ROUNDING} decimals)`}
-          type="number"
+          onChange={setRounding}
+          maxRounding={MAX_ROUNDING}
         />
       </Stack>
       <div style={{ width: "200px" }}>
         <pre>{parshape}</pre>
       </div>
     </Stack>
+  );
+}
+
+function RoundingField({ value, onChange, maxRounding }) {
+  return (
+    <TextField
+      value={value}
+      onChange={(e) => onChange(+e.target.value)}
+      label={`rounding (max ${maxRounding} decimals)`}
+      type="number"
+    />
   );
 }
 
