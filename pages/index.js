@@ -42,6 +42,7 @@ export default function Home() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          padding-bottom: 5rem;
         }
 
         footer {
