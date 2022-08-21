@@ -13,7 +13,9 @@ export default function Home() {
       <heading>
         <h1 className="title">Parshape</h1>
 
-        <p className="description">Draw shape of your TeX paragraph in a GUI</p>
+        <p className="description">
+          Draw the shape of your TeX paragraph in a GUI
+        </p>
       </heading>
 
       <main>
