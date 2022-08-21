@@ -32,6 +32,10 @@ export default function Home() {
           align-items: center;
         }
 
+        heading {
+          padding-top: 1rem;
+        }
+
         main {
           padding: 5rem 0;
           flex: 1;
