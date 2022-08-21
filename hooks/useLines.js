@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import arrayOfLen from "../utils/arrayOfLen";
 import calculateLineParamsFromPoints from "../utils/calculateLineParamsFromPoints";
 import floatEq from "../utils/floatEq";
-import { isInLineX } from "../utils/isInLine";
+import isInLine from "../utils/isInLine";
 
 export default function useLines(settings) {
   const { numLines, hsize } = settings;
@@ -72,11 +72,10 @@ function normalizeLine(line, width) {
 function applyLineToLeftEdge(lines, line, settings) {
   return lines.map((paragraphLine, i) => {
     // middle of the paragraph
-    const height = (i + 0.5) * settings.baselineskip;
+    const ypos = (i + 0.5) * settings.baselineskip;
+    const xpos = calculateXPosAtHeight(line, ypos);
 
-    const xpos = calculateXPosAtHeight(line, height);
-
-    if (!isInLineX(line, xpos)) {
+    if (!isInLine(line, [xpos, ypos])) {
       return paragraphLine;
     }
 
@@ -89,11 +88,10 @@ function applyLineToLeftEdge(lines, line, settings) {
 function applyLineToRightEdge(lines, line, settings) {
   return lines.map((paragraphLine, i) => {
     // middle of the paragraph
-    const height = (i + 0.5) * settings.baselineskip;
+    const ypos = (i + 0.5) * settings.baselineskip;
+    const xpos = calculateXPosAtHeight(line, ypos);
 
-    const xpos = calculateXPosAtHeight(line, height);
-
-    if (!isInLineX(line, xpos)) {
+    if (!isInLine(line, [xpos, ypos])) {
       return paragraphLine;
     }
 
