@@ -53,7 +53,7 @@ export default function Parshape({ lines, width }) {
         />
       </Stack>
       <div style={{ width: "200px" }}>
-        <pre>{parshapeWithDetails}</pre>
+        <pre style={{ marginTop: 0 }}>{parshapeWithDetails}</pre>
       </div>
     </Stack>
   );
