@@ -19,12 +19,27 @@ export default function Editor() {
     cloneDeep(Settings.DEFAULT_SETTINGS)
   );
 
-  const { lines, updateLine, applyObject } = useLines(settings);
+  const { lines, updateLine, applyObject, setLines } = useLines(settings);
   const [newType, setNewType] = useState(null);
   const [newObject, setNewObject] = useState(null);
   const [edge, setEdge] = useState("left");
 
-  const { current: currentLines, goToPrevious, goToNext } = useHistory(lines);
+  const setLinesFromHistory = useCallback(
+    (historicalLines) => {
+      setLines(historicalLines);
+      setSettings((settings) => ({
+        ...settings,
+        numLines: historicalLines.length,
+      }));
+    },
+    [setLines]
+  );
+
+  const {
+    current: currentLines,
+    goToPrevious,
+    goToNext,
+  } = useHistory(lines, setLinesFromHistory);
 
   const clearNew = useCallback(() => {
     setNewType(null);
