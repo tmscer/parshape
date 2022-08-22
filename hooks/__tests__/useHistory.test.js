@@ -73,7 +73,7 @@ describe("useHistory", () => {
     expect(result.current.current).toBe(5);
 
     act(() => {
-      rerender("hello");
+      rerender(["hello"]);
     });
 
     expect(result.current.current).toBe("hello");
@@ -85,23 +85,80 @@ describe("useHistory", () => {
     expect(result.current.current).toBe("hello");
   });
 
+  test("onChange callback isn't invokes on first render", () => {
+    const onChange = jest.fn();
+    setupHistory(addOne, 6, onChange);
+
+    expect(onChange).toHaveBeenCalledTimes(0);
+  });
+
+  test("going back invokes callback", () => {
+    const onChange = jest.fn();
+    const { result } = setupHistory(addOne, 6, onChange);
+
+    act(() => {
+      result.current.goToPrevious();
+    });
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith(5);
+  });
+
+  test("going forward invokes callback", () => {
+    const onChange = jest.fn();
+    const { result } = setupHistory(addOne, 10, onChange);
+
+    act(() => {
+      result.current.goToPrevious();
+    });
+
+    act(() => {
+      result.current.goToNext();
+    });
+
+    expect(onChange).toHaveBeenLastCalledWith(10);
+    expect(onChange).toHaveBeenCalledTimes(2);
+  });
+
+  test("going forward when there is no more future doesn't invoke callback", () => {
+    const onChange = jest.fn();
+    const { result } = setupHistory(addOne, 8, onChange);
+
+    act(() => {
+      result.current.goToNext();
+    });
+
+    expect(onChange).toHaveBeenCalledTimes(0);
+  });
+
+  test("going back when there is no past doesn't invoke callback", () => {
+    const onChange = jest.fn();
+    const { result } = setupHistory(addOne, 0, onChange);
+
+    act(() => {
+      result.current.goToPrevious();
+    });
+
+    expect(onChange).toHaveBeenCalledTimes(0);
+  });
+
   function addOne(n) {
     return n + 1;
   }
 
-  function setupHistory(getNthValue, iterations) {
+  function setupHistory(getNthValue, iterations, onChange = undefined) {
     if (iterations < 0) {
       throw new Error("Iterations must a be number >= 0");
     }
 
-    const hook = renderHook(useHistory, {
-      initialProps: getNthValue(0),
+    const hook = renderHook((args) => useHistory(...args), {
+      initialProps: [getNthValue(0), onChange],
     });
 
     for (let n = 1; n < iterations; n += 1) {
       act(() => {
         const value = getNthValue(n);
-        hook.rerender(value);
+        hook.rerender([value, onChange]);
       });
     }
 
