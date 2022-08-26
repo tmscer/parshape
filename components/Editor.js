@@ -74,6 +74,7 @@ export default function Editor() {
         <Stack direction="column" gap={4}>
           <Stack direction="row" gap={4}>
             <Toolbar
+              activeType={newType}
               onClick={onToolbarClick}
               prev={goToPrevious}
               next={goToNext}

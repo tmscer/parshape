@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Stack } from "@mui/material";
 import { useCallback } from "react";
 
-export default function Toolbar({ onClick, prev, next }) {
+export default function Toolbar({ onClick, prev, next, activeType }) {
   const createOnClick = useCallback(
     (name) => (_event) => {
       onClick(name);
@@ -16,8 +16,16 @@ export default function Toolbar({ onClick, prev, next }) {
         orientation="horizontal"
         sx={{ flexWrap: "wrap" }}
       >
-        <ToolbarButton onClick={createOnClick("line")}>line</ToolbarButton>
-        <ToolbarButton onClick={createOnClick("snap-angle-line")}>
+        <ToolbarButton
+          isActive={activeType === "line"}
+          onClick={createOnClick("line")}
+        >
+          line
+        </ToolbarButton>
+        <ToolbarButton
+          isActive={activeType === "snap-angle-line"}
+          onClick={createOnClick("snap-angle-line")}
+        >
           snap angle line
         </ToolbarButton>
         {/* <ToolbarButton onClick={createOnClick("circle")}>circle</ToolbarButton> */}
