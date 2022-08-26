@@ -48,10 +48,10 @@ export default function useOnCanvasClick({
           addObject(finalLine);
           clearNew();
         }
-      } else if (newType === "circle") {
+      } else if (newType.includes("circle")) {
         if (!newObject) {
           setNewObject({
-            type: "circle",
+            type: newType,
             center: [x, y],
             // Some value to be updated later
             radius: 10,

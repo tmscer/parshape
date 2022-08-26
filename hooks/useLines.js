@@ -4,6 +4,7 @@ import arrayOfLen from "../utils/arrayOfLen";
 import calculateLineParamsFromPoints from "../utils/calculateLineParamsFromPoints";
 import floatEq from "../utils/floatEq";
 import isInLine from "../utils/isInLine";
+import solveQuadraticEquation from "../utils/solveQuadraticEquation";
 
 export default function useLines(settings) {
   const { numLines, hsize } = settings;
@@ -43,6 +44,16 @@ export default function useLines(settings) {
       } else if (edge === "right") {
         return setLines(applyLineToRightEdge(usedLines, obj, settings));
       }
+    }
+
+    if (obj.type === "left-circle") {
+      return setLines(
+        applyCircle(usedLines, { ...obj, side: "left" }, settings, edge)
+      );
+    } else if (obj.type === "right-circle") {
+      return setLines(
+        applyCircle(usedLines, { ...obj, side: "right" }, settings, edge)
+      );
     }
 
     throw new Error(
@@ -95,6 +106,47 @@ function applyLineToRightEdge(lines, line, settings) {
       settings.hsize - Math.min(settings.hsize - paragraphLine[1], xpos);
 
     return [paragraphLine[0], newRight];
+  });
+}
+
+function applyCircle(lines, circle, settings, edge) {
+  const {
+    center: [a, b],
+    radius: r,
+    side,
+  } = circle;
+
+  return lines.map((paragraphLine, lineNum) => {
+    const ypos = (lineNum + 0.5) * settings.baselineskip;
+    const quadraticEquation = [
+      1,
+      -2 * a,
+      Math.pow(a, 2) - Math.pow(r, 2) + Math.pow(ypos - b, 2),
+    ];
+    const solutions = solveQuadraticEquation(...quadraticEquation);
+
+    if (solutions.length === 0) {
+      // paragraph line doesn't intersect with the circle
+      return paragraphLine;
+    }
+
+    const chosenSolution = (side === "left" ? Math.min : Math.max)(
+      ...solutions
+    );
+
+    if (edge === "left") {
+      return [Math.max(chosenSolution, paragraphLine[0]), paragraphLine[1]];
+    }
+
+    if (edge === "right") {
+      const newRight =
+        settings.hsize -
+        Math.min(settings.hsize - paragraphLine[1], chosenSolution);
+
+      return [paragraphLine[0], newRight];
+    }
+
+    return paragraphLine;
   });
 }
 

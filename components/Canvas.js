@@ -85,7 +85,7 @@ export default function Canvas({
 function renderObject(obj) {
   if (obj.type === "line") {
     return <Line start={obj.start} stop={obj.stop} />;
-  } else if (obj.type === "circle") {
+  } else if (obj.type.includes("circle")) {
     return <Circle center={obj.center} radius={obj.radius} />;
   }
 

@@ -32,7 +32,7 @@ export default function useOnCanvasMouseOver({ newType, setNewObject }) {
             stop: snapLineToAngle(newObj.start, [x, y], degToRad(15))[1],
           };
         });
-      } else if (newType === "circle") {
+      } else if (newType.includes("circle")) {
         setNewObject((newObj) => {
           if (!newObj) {
             return newObj;

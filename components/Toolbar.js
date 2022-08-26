@@ -28,7 +28,18 @@ export default function Toolbar({ onClick, prev, next, activeType }) {
         >
           snap angle line
         </ToolbarButton>
-        {/* <ToolbarButton onClick={createOnClick("circle")}>circle</ToolbarButton> */}
+        <ToolbarButton
+          isActive={activeType === "left-circle"}
+          onClick={createOnClick("left-circle")}
+        >
+          l. circle
+        </ToolbarButton>
+        <ToolbarButton
+          isActive={activeType === "right-circle"}
+          onClick={createOnClick("right-circle")}
+        >
+          r. circle
+        </ToolbarButton>
         <ToolbarButton onClick={() => prev()}>prev</ToolbarButton>
         <ToolbarButton onClick={() => next()}>next</ToolbarButton>
       </ButtonGroup>
