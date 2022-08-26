@@ -60,7 +60,16 @@ export default function Parshape({ lines, width }) {
 }
 
 function NoIndentCheckBox(props) {
-  return <LabeledCheckbox {...props} label="Add \noindent" />;
+  return (
+    <LabeledCheckbox
+      {...props}
+      label={
+        <>
+          Add <tt>\noindent</tt>
+        </>
+      }
+    />
+  );
 }
 
 function LastLineIsFullLineCheckBox(props) {
