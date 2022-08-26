@@ -9,6 +9,7 @@ import useOnCanvasClick from "../hooks/useOnCanvasClick";
 import useOnCanvasMouseOver from "../hooks/useOnCanvasMouseOver";
 import Canvas from "./Canvas";
 import EdgeButton from "./EdgeButton";
+import ImportParshape from "./ImportParshape";
 import Parshape from "./Parshape";
 import Settings from "./Settings";
 import Toolbar from "./Toolbar";
@@ -97,7 +98,10 @@ export default function Editor() {
         </Stack>
         <Settings settings={settings} onChange={setSettings} />
       </Stack>
-      <Parshape width={settings.hsize} lines={currentLines} />
+      <Stack direction="row" gap={4}>
+        <Parshape width={settings.hsize} lines={currentLines} />
+        <ImportParshape setLines={setLinesFromHistory} settings={settings} />
+      </Stack>
     </div>
   );
 }
