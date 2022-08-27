@@ -8,7 +8,7 @@ export default function Toolbar({ onClick, prev, next, activeType }) {
     (name) => (_event) => {
       if (name === "bezier-curve") {
         alert(
-          "Place at least two points and as many as you want using LEFT MOUSE BUTTON.\n\nPress RIGHT MOUSE BUTTON to place the last point.\n\nPress ESCAPE to cancel."
+          "Place points using LEFT MOUSE BUTTON.\n\nPress RIGHT MOUSE BUTTON to place the last point.\n\nPress ESCAPE to cancel."
         );
       }
 
