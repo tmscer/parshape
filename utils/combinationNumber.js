@@ -1,5 +1,5 @@
 export default function combinationNumber(n, k) {
-  if (!isInputValid(n) || !isInputValid(n)) {
+  if (!isInputValid(n) || !isInputValid(k)) {
     throw new Error(`Invalid input: ${n}, ${k}`);
   }
 
