@@ -1,4 +1,4 @@
-import { memo, useRef } from "react";
+import { memo, useCallback, useRef } from "react";
 
 import Circle from "./Circle";
 import Line from "./Line";
@@ -18,18 +18,21 @@ export default function Canvas({
 
   const unit = useUnit();
 
-  const createMouseEmitter = (callback) => (event) => {
-    if (!ref) {
-      throw new Error("Mouse event before knowing the ref");
-    }
+  const createMouseEmitter = useCallback(
+    (callback) => (event) => {
+      if (!ref) {
+        throw new Error("Mouse event before knowing the ref");
+      }
 
-    const { top, left } = ref.current.getBoundingClientRect();
+      const { top, left } = ref.current.getBoundingClientRect();
 
-    const x = event.clientX - left - settings.hoffset;
-    const y = event.clientY - top - settings.voffset;
+      const x = event.clientX - left - settings.hoffset;
+      const y = event.clientY - top - settings.voffset;
 
-    callback({ x, y }, event);
-  };
+      callback({ x, y }, event);
+    },
+    [ref, settings.hoffset, settings.voffset]
+  );
 
   const lineHeight = settings.baselineskip - settings.lineskip;
 
