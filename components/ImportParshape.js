@@ -42,6 +42,19 @@ export default function ImportParshape({ setLines, settings }) {
           Import an existing <tt>\parshape</tt> command
         </DialogTitle>
         <DialogContent>
+          <Alert severity="info" sx={{ mb: 2 }}>
+            Importing supports limited TeX syntax. For example groups
+            aren&apos;t supported but units listed{" "}
+            <a
+              href="https://en.wikibooks.org/wiki/TeX/TeX_dimensions"
+              target="_blank"
+              rel="noreferrer"
+            >
+              here
+            </a>{" "}
+            except <tt>em</tt> and <tt>ex</tt> are. Outputs from this project
+            will always be supported.
+          </Alert>
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {error.message}
