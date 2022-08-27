@@ -7,6 +7,7 @@ const CUSTOM_VALUE = "__custom_value__";
 export default function SelectWithCustomValue({
   value: { value, custom },
   setValue: _setValue,
+  unit,
   options,
   ...props
 }) {
@@ -75,9 +76,12 @@ export default function SelectWithCustomValue({
       onChange={setValue}
       InputProps={{
         endAdornment: custom ? (
-          <ClearCustomValue
-            onClick={() => setPredefinedValue(options[0].value)}
-          />
+          <>
+            {unit}
+            <ClearCustomValue
+              onClick={() => setPredefinedValue(options[0].value)}
+            />
+          </>
         ) : null,
         ...(props.InputProps || {}),
       }}

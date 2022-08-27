@@ -7,6 +7,7 @@ import PageHeightField, {
 import PageWidthField, {
   OPTIONS as PAGE_WIDTH_OPTIONS,
 } from "./PageWidthField";
+import Pt from "./Pt";
 
 export default function Settings({ settings, onChange }) {
   const {
@@ -72,30 +73,45 @@ export default function Settings({ settings, onChange }) {
         variant="outlined"
         value={hoffset}
         onChange={createUpdate("hoffset", convertToFloat)}
+        InputProps={{
+          endAdornment: <Pt />,
+        }}
       />
       <TextField
         helperText="voffset + pdfvorigin"
         variant="outlined"
         value={voffset}
         onChange={createUpdate("voffset", convertToFloat)}
+        InputProps={{
+          endAdornment: <Pt />,
+        }}
       />
       <TextField
         helperText="hsize"
         variant="outlined"
         value={hsize}
         onChange={createUpdate("hsize", convertToFloat)}
+        InputProps={{
+          endAdornment: <Pt />,
+        }}
       />
       <TextField
         helperText="baselineskip"
         variant="outlined"
         value={baselineskip}
         onChange={createUpdate("baselineskip", convertToFloat)}
+        InputProps={{
+          endAdornment: <Pt />,
+        }}
       />
       <TextField
         helperText="lineskip"
         variant="outlined"
         value={lineskip}
         onChange={createUpdate("lineskip", convertToFloat)}
+        InputProps={{
+          endAdornment: <Pt />,
+        }}
       />
     </Stack>
   );

@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import Pt from "./Pt";
 import SelectWithCustomValue from "./SelectWithCustomValue";
 
 export const OPTIONS = [
@@ -31,6 +32,7 @@ export default function HsizeSelect({ value, setValue: _setValue, ...props }) {
       value={value}
       setValue={setValue}
       options={OPTIONS}
+      unit={<Pt />}
       {...props}
     />
   );
