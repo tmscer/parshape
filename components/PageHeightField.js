@@ -16,7 +16,11 @@ export const OPTIONS = [
   },
 ];
 
-export default function HsizeSelect({ value, setValue: _setValue, ...props }) {
+export default function PageHeightField({
+  value,
+  setValue: _setValue,
+  ...props
+}) {
   const setValue = useCallback(
     ({ value, ...rest }) => {
       _setValue({
