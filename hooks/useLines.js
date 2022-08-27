@@ -56,6 +56,10 @@ export default function useLines(settings) {
       );
     }
 
+    if (obj.type === "bezier-curve") {
+      return setLines(applyBezierCurve(usedLines, obj, settings, edge));
+    }
+
     throw new Error(
       `cannot apply object of type "${obj.type}" to the ${edge} edge`
     );
@@ -80,9 +84,13 @@ function normalizeLine(line, width) {
   return [normalizedLeft, normalizedRight];
 }
 
-function applyLineToLeftEdge(lines, line, settings) {
+function applyLineToLeftEdge(lines, line, settings, lineNumOffset = 0) {
   return lines.map((paragraphLine, i) => {
-    const [xpos, ypos] = xposAndYpos(line, settings.baselineskip, i);
+    const [xpos, ypos] = xposAndYpos(
+      line,
+      settings.baselineskip,
+      i + lineNumOffset
+    );
 
     if (!isInLine(line, [xpos, ypos])) {
       return paragraphLine;
@@ -94,9 +102,13 @@ function applyLineToLeftEdge(lines, line, settings) {
   });
 }
 
-function applyLineToRightEdge(lines, line, settings) {
+function applyLineToRightEdge(lines, line, settings, lineNumOffset = 0) {
   return lines.map((paragraphLine, i) => {
-    const [xpos, ypos] = xposAndYpos(line, settings.baselineskip, i);
+    const [xpos, ypos] = xposAndYpos(
+      line,
+      settings.baselineskip,
+      i + lineNumOffset
+    );
 
     if (!isInLine(line, [xpos, ypos])) {
       return paragraphLine;
@@ -147,6 +159,43 @@ function applyCircle(lines, circle, settings, edge) {
     }
 
     return paragraphLine;
+  });
+}
+
+function applyBezierCurve(lines, curve, settings, edge) {
+  const { points } = curve;
+
+  return lines.map((paragraphLine, lineNum) => {
+    let newLeft = paragraphLine[0];
+    let newRight = paragraphLine[1];
+
+    for (let i = 1; i < points.length; i += 1) {
+      const line = { start: points[i - 1], stop: points[i] };
+
+      if (edge === "left") {
+        const [[left, _]] = applyLineToLeftEdge(
+          [paragraphLine],
+          line,
+          settings,
+          lineNum
+        );
+
+        newLeft = Math.max(left, newLeft);
+      } else if (edge === "right") {
+        const [[_, right]] = applyLineToRightEdge(
+          [paragraphLine],
+          line,
+          settings,
+          lineNum
+        );
+
+        newRight =
+          settings.hsize -
+          Math.min(settings.hsize - newRight, settings.hsize - right);
+      }
+    }
+
+    return [newLeft, newRight];
   });
 }
 

@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import bezierCurve from "../utils/bezierCurve";
 import { degToRad } from "../utils/degRadConversion";
 import snapLineToAngle from "../utils/snapLineToAngle";
 
@@ -11,7 +12,7 @@ export default function useOnCanvasClick({
   addObject,
 }) {
   const onCanvasClick = useCallback(
-    ({ x, y }) => {
+    ({ x, y }, event) => {
       if (!newType) {
         return;
       }
@@ -66,6 +67,41 @@ export default function useOnCanvasClick({
           };
 
           addObject(finalCircle);
+          clearNew();
+        }
+      } else if (newType === "bezier-curve") {
+        if (!newObject) {
+          const sourcePoints = [[x, y]];
+
+          setNewObject({
+            type: "bezier-curve",
+            sourcePoints,
+            // Bezier curve needs at least two points but right now we only
+            // have one
+            points: bezierCurve([...sourcePoints, ...sourcePoints]),
+          });
+        } else if (event.type !== "contextmenu") {
+          const sourcePoints = [...newObject.sourcePoints, [x, y]];
+
+          const curve = {
+            type: "bezier-curve",
+            sourcePoints,
+            points: bezierCurve(sourcePoints),
+          };
+
+          setNewObject(curve);
+        } else if (event.type === "contextmenu") {
+          event.preventDefault();
+
+          const sourcePoints = [...newObject.sourcePoints, [x, y]];
+
+          const curve = {
+            type: "bezier-curve",
+            sourcePoints,
+            points: bezierCurve(sourcePoints),
+          };
+
+          addObject(curve);
           clearNew();
         }
       }

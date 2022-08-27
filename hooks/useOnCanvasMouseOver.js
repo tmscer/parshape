@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import bezierCurve from "../utils/bezierCurve";
 import { degToRad } from "../utils/degRadConversion";
 import snapLineToAngle from "../utils/snapLineToAngle";
 
@@ -44,6 +45,17 @@ export default function useOnCanvasMouseOver({ newType, setNewObject }) {
           return {
             ...newObj,
             radius: Math.sqrt(dx * dx + dy * dy),
+          };
+        });
+      } else if (newType === "bezier-curve") {
+        setNewObject((newObj) => {
+          if (!newObj) {
+            return newObj;
+          }
+
+          return {
+            ...newObj,
+            points: bezierCurve([...newObj.sourcePoints, [x, y]]),
           };
         });
       }

@@ -4,6 +4,12 @@ import { useCallback } from "react";
 export default function Toolbar({ onClick, prev, next, activeType }) {
   const createOnClick = useCallback(
     (name) => (_event) => {
+      if (name === "bezier-curve") {
+        alert(
+          "Place at least two points and as many as you want using LEFT MOUSE BUTTON.\n\nPress RIGHT MOUSE BUTTON to place the last point.\n\nPress ESCAPE to cancel."
+        );
+      }
+
       onClick(name);
     },
     [onClick]
@@ -39,6 +45,12 @@ export default function Toolbar({ onClick, prev, next, activeType }) {
           onClick={createOnClick("right-circle")}
         >
           r. circle
+        </ToolbarButton>
+        <ToolbarButton
+          isActive={activeType === "bezier-curve"}
+          onClick={createOnClick("bezier-curve")}
+        >
+          bezier curve
         </ToolbarButton>
         <ToolbarButton onClick={() => prev()}>prev</ToolbarButton>
         <ToolbarButton onClick={() => next()}>next</ToolbarButton>
