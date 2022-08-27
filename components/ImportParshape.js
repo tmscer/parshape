@@ -11,6 +11,7 @@ import isHotkey from "is-hotkey";
 import { useCallback, useMemo, useState } from "react";
 
 import parseParshape from "../utils/parseParshape";
+import TeX from "./TeX";
 
 export default function ImportParshape({ setLines, settings }) {
   const [open, setOpen] = useState(false);
@@ -73,7 +74,7 @@ export default function ImportParshape({ setLines, settings }) {
         >
           <DialogContent>
             <Alert severity="info" sx={{ mb: 2 }}>
-              Importing supports limited TeX syntax. For example groups
+              Importing supports limited <TeX /> syntax. For example groups
               aren&apos;t supported but units listed{" "}
               <a
                 href="https://en.wikibooks.org/wiki/TeX/TeX_dimensions"

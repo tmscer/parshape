@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 
 import Editor from "../components/Editor";
+import TeX from "../components/TeX";
 
 export default function Home() {
   return (
@@ -15,7 +16,7 @@ export default function Home() {
         <h1 className="title">Parshape</h1>
 
         <p className="description">
-          Draw the shape of your TeX paragraph in a GUI
+          Draw the shape of your <TeX /> paragraph in a GUI
         </p>
       </heading>
 
