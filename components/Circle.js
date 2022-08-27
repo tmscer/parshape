@@ -1,18 +1,15 @@
 import LeftTop from "./LeftTop";
 import { useUnit } from "./UnitContext";
 
-export default function Circle({ center, radius }) {
+export default function Circle({ center, radius, left, right }) {
   const unit = useUnit();
 
-  const left = center[0] - radius;
-  const top = center[1] - radius;
-
   return (
-    <LeftTop left={left} top={top}>
+    <LeftTop left={center[0] - radius} top={center[1] - radius}>
       <div
         style={{
           position: "relative",
-          border: "1px solid red",
+          ...chooseBorderStyleKeys({ left, right }, "1px solid red"),
           borderRadius: "50%",
           width: unit(radius * 2),
           height: unit(radius * 2),
@@ -20,4 +17,29 @@ export default function Circle({ center, radius }) {
       />
     </LeftTop>
   );
+}
+
+function chooseBorderStyleKeys({ left, right }, value) {
+  const borderStyles = {
+    borderLeft: value,
+    borderBottom: value,
+  };
+
+  if (left && !right) {
+    return {
+      ...borderStyles,
+      transform: "rotate(45deg)",
+    };
+  }
+
+  if (right && !left) {
+    return {
+      ...borderStyles,
+      transform: "rotate(225deg)",
+    };
+  }
+
+  return {
+    border: value,
+  };
 }
