@@ -49,6 +49,7 @@ export default function Canvas({
         border: "1px solid grey",
       }}
       onClick={createMouseEmitter(onClickOuter)}
+      onContextMenu={createMouseEmitter(onClickOuter)}
       onMouseMove={createMouseEmitter(onMouseMoveOuter)}
     >
       <div style={{ position: "relative" }}>
