@@ -141,5 +141,5 @@ function convertToInt(value) {
 
 function convertToFloat(value) {
   const onlyNumbersAndDot = value.replace(/[^0-9.]/g, "");
-  return parseFloat(onlyNumbersAndDot);
+  return parseFloat(onlyNumbersAndDot) || 0;
 }

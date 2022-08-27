@@ -7,7 +7,8 @@ import isInLine from "../utils/isInLine";
 import solveQuadraticEquation from "../utils/solveQuadraticEquation";
 
 export default function useLines(settings) {
-  const { numLines, hsize } = settings;
+  const { numLines: _numLines, hsize } = settings;
+  const numLines = _numLines || 1;
 
   const [lines, setLines] = useState(() => getNewLines([], numLines));
 
