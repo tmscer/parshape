@@ -28,7 +28,7 @@ export default function Canvas({
     const x = event.clientX - left - settings.hoffset;
     const y = event.clientY - top - settings.voffset;
 
-    callback({ x, y });
+    callback({ x, y }, event);
   };
 
   const lineHeight = settings.baselineskip - settings.lineskip;
