@@ -1,3 +1,5 @@
+import NextIcon from "@mui/icons-material/Redo";
+import PrevIcon from "@mui/icons-material/Undo";
 import { Button, ButtonGroup, Stack } from "@mui/material";
 import { useCallback } from "react";
 
@@ -52,8 +54,12 @@ export default function Toolbar({ onClick, prev, next, activeType }) {
         >
           bezier curve
         </ToolbarButton>
-        <ToolbarButton onClick={() => prev()}>prev</ToolbarButton>
-        <ToolbarButton onClick={() => next()}>next</ToolbarButton>
+        <ToolbarButton onClick={() => prev()}>
+          <PrevIcon />
+        </ToolbarButton>
+        <ToolbarButton onClick={() => next()}>
+          <NextIcon />
+        </ToolbarButton>
       </ButtonGroup>
     </Stack>
   );
