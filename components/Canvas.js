@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 
 import Circle from "./Circle";
 import Line from "./Line";
@@ -18,6 +18,8 @@ export default function Canvas({
 
   const unit = useUnit();
 
+  const [lastMousePos, setLastMousePos] = useState(null);
+
   const createMouseEmitter = useCallback(
     (callback) => (event) => {
       if (!ref) {
@@ -29,6 +31,7 @@ export default function Canvas({
       const x = event.clientX - left - settings.hoffset;
       const y = event.clientY - top - settings.voffset;
 
+      setLastMousePos([x, y]);
       callback({ x, y }, event);
     },
     [ref, settings.hoffset, settings.voffset]
@@ -54,6 +57,7 @@ export default function Canvas({
       onClick={createMouseEmitter(onClickOuter)}
       onContextMenu={createMouseEmitter(onClickOuter)}
       onMouseMove={createMouseEmitter(onMouseMoveOuter)}
+      onMouseLeave={() => setLastMousePos(null)}
     >
       <div style={{ position: "relative" }}>
         {objects.map((obj, i) => (
@@ -69,6 +73,7 @@ export default function Canvas({
           borderRight: "1px solid grey",
         }}
       >
+        <CursorCoordinates pos={lastMousePos} settings={settings} />
         {lines.map((line, i) => (
           <ParagraphLine
             key={i}
@@ -118,4 +123,29 @@ function _RenderObject({ obj }) {
   }
 
   throw new Error(`Unknown geometry object of type ${obj.type}`);
+}
+
+function CursorCoordinates({ pos, settings }) {
+  const unit = useUnit();
+
+  if (!pos) {
+    return null;
+  }
+
+  return (
+    <span
+      style={{
+        position: "relative",
+        left: unit(-settings.hoffset + 5),
+        top: unit(-settings.voffset),
+        color: "#999999",
+        fontSize: "1.2em",
+        pointerEvents: "none",
+      }}
+    >
+      <tt>
+        x = {Math.round(pos[0])}, y = {Math.round(pos[1])}
+      </tt>
+    </span>
+  );
 }
