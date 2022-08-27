@@ -19,19 +19,23 @@ export default function ImportParshape({ setLines, settings }) {
 
   const numTextLines = useMemo(() => parshape.split("\n").length, [parshape]);
 
+  const close = useCallback(() => {
+    setError(null);
+    setOpen(false);
+  }, []);
+
   const onConfirm = useCallback(() => {
     try {
       const parsedParagraphLines = parseParshape(parshape, {
         hsize: settings.hsize,
       });
 
-      setError(null);
       setLines(parsedParagraphLines);
-      setOpen(false);
+      close();
     } catch (error) {
       setError(error);
     }
-  }, [parshape, setLines, settings.hsize]);
+  }, [parshape, setLines, settings.hsize, close]);
 
   const onSubmit = useCallback(
     (event) => {
@@ -58,7 +62,7 @@ export default function ImportParshape({ setLines, settings }) {
       <Button variant="outlined" onClick={() => setOpen(true)}>
         Import \parshape
       </Button>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={open} onClose={close}>
         <DialogTitle>
           Import an existing <tt>\parshape</tt> command
         </DialogTitle>
