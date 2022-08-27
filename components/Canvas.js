@@ -97,6 +97,18 @@ function renderObject(obj) {
         right={right}
       />
     );
+  } else if (obj.type === "polygonal-chain") {
+    const { points } = obj;
+
+    return (
+      <>
+        {points.slice(1).map((point, i) => {
+          const prevPoint = points[i];
+
+          return <Line key={i} start={prevPoint} stop={point} />;
+        })}
+      </>
+    );
   }
 
   throw new Error(`Unknown geometry object of type ${obj.type}`);
