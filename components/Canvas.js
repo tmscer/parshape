@@ -1,4 +1,4 @@
-import { Fragment, useRef } from "react";
+import { memo, useRef } from "react";
 
 import Circle from "./Circle";
 import Line from "./Line";
@@ -53,7 +53,7 @@ export default function Canvas({
     >
       <div style={{ position: "relative" }}>
         {objects.map((obj, i) => (
-          <Fragment key={i}>{renderObject(obj)}</Fragment>
+          <RenderObject key={i} obj={obj} />
         ))}
       </div>
       <div
@@ -82,7 +82,9 @@ export default function Canvas({
   );
 }
 
-function renderObject(obj) {
+const RenderObject = memo(_RenderObject);
+
+function _RenderObject({ obj }) {
   if (obj.type === "line") {
     return <Line start={obj.start} stop={obj.stop} />;
   } else if (obj.type.includes("circle")) {
