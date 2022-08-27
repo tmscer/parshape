@@ -32,7 +32,10 @@ function createKeyListener({ prev, next, clearNew }) {
   }
 
   return function keyListener(event) {
-    if (event?.target.tagName.toLowerCase() !== "body") {
+    if (
+      event?.target.tagName.toLowerCase() !== "body" &&
+      !isHotkey("escape", event)
+    ) {
       return;
     }
 
