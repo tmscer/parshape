@@ -28,18 +28,23 @@ export default function useLines(settings) {
 
   const updateLine = (i, line) => {
     setLines((lines) => {
-      return [...lines.slice(0, i), line, ...lines.slice(i + 1)];
+      const updatedLine = typeof line === "function" ? line(lines) : line;
+      return [...lines.slice(0, i), updatedLine, ...lines.slice(i + 1)];
     });
   };
 
   const updateLeft = (i, left) => {
-    const [_, right] = lines[i];
-    updateLine(i, [left, right]);
+    updateLine((lines) => {
+      const [_, right] = lines[i];
+      return [left, right];
+    });
   };
 
   const updateRight = (i, right) => {
-    const [left, _] = lines[i];
-    updateLine(i, [left, right]);
+    updateLine((lines) => {
+      const [left, _] = lines[i];
+      return [left, right];
+    });
   };
 
   const applyObject = (obj, edge, usedLines = lines) => {
