@@ -47,32 +47,32 @@ export default function useLines(settings) {
     });
   };
 
-  const applyObject = (obj, edge, usedLines = lines) => {
-    if (obj.type === "line") {
-      if (edge === "left") {
-        return setLines(applyLineToLeftEdge(usedLines, obj, settings));
-      } else if (edge === "right") {
-        return setLines(applyLineToRightEdge(usedLines, obj, settings));
+  const applyObject = (obj, edge, newLines = undefined) => {
+    setLines((actualLines) => {
+      const usedLines = newLines ?? actualLines;
+
+      if (obj.type === "line") {
+        if (edge === "left") {
+          return applyLineToLeftEdge(usedLines, obj, settings);
+        } else if (edge === "right") {
+          return applyLineToRightEdge(usedLines, obj, settings);
+        }
       }
-    }
 
-    if (obj.type === "left-circle") {
-      return setLines(
-        applyCircle(usedLines, { ...obj, side: "left" }, settings, edge)
+      if (obj.type === "left-circle") {
+        return applyCircle(usedLines, { ...obj, side: "left" }, settings, edge);
+      } else if (obj.type === "right-circle") {
+        return applyCircle(usedLines, { ...obj, side: "right" }, settings, edge);
+      }
+
+      if (obj.type === "bezier-curve") {
+        return applyBezierCurve(usedLines, obj, settings, edge);
+      }
+
+      throw new Error(
+        `cannot apply object of type "${obj.type}" to the ${edge} edge`
       );
-    } else if (obj.type === "right-circle") {
-      return setLines(
-        applyCircle(usedLines, { ...obj, side: "right" }, settings, edge)
-      );
-    }
-
-    if (obj.type === "bezier-curve") {
-      return setLines(applyBezierCurve(usedLines, obj, settings, edge));
-    }
-
-    throw new Error(
-      `cannot apply object of type "${obj.type}" to the ${edge} edge`
-    );
+    });
   };
 
   return {
