@@ -1,0 +1,39 @@
+name: Static Build
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-static:
+    name: Static Build
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16"
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-ui-node-modules
+        with:
+          path: |
+            ${{ env.working-directory }}/node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-v2-${{ hashFiles('package.json') }}
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{ env.working-directory }}
+
+      - name: Upload artifact with static build
+        uses: actions/upload-artifact@v3
+        with:
+          name: static-build
+          path: ./out

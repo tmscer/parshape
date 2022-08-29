@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "PORT=4000 next dev",
     "build": "next build",
+    "build:static": "npm run build && next export",
     "start": "PORT=4000 next start",
     "test": "LC_ALL=en_US.UTF-8 TZ=UTC jest --passWithNoTests",
     "test:watch": "LC_ALL=en_US.UTF-8 TZ=UTC jest --watch",
