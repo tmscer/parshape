@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import arrayOfLen from "../utils/arrayOfLen";
 import calculateLineParamsFromPoints from "../utils/calculateLineParamsFromPoints";
@@ -26,54 +26,76 @@ export default function useLines(settings) {
     setLines(getNewLines(lines, numLines));
   }, [numLines, lines, setLines]);
 
-  const updateLine = (i, line) => {
-    setLines((lines) => {
-      const updatedLine = typeof line === "function" ? line(lines) : line;
-      return [...lines.slice(0, i), updatedLine, ...lines.slice(i + 1)];
-    });
-  };
+  const updateLine = useCallback(
+    (i, line) => {
+      setLines((lines) => {
+        const updatedLine = typeof line === "function" ? line(lines) : line;
+        return [...lines.slice(0, i), updatedLine, ...lines.slice(i + 1)];
+      });
+    },
+    [setLines]
+  );
 
-  const updateLeft = (i, left) => {
-    updateLine((lines) => {
-      const [_, right] = lines[i];
-      return [left, right];
-    });
-  };
+  const updateLeft = useCallback(
+    (i, left) => {
+      updateLine((lines) => {
+        const [_, right] = lines[i];
+        return [left, right];
+      });
+    },
+    [updateLine]
+  );
 
-  const updateRight = (i, right) => {
-    updateLine((lines) => {
-      const [left, _] = lines[i];
-      return [left, right];
-    });
-  };
+  const updateRight = useCallback(
+    (i, right) => {
+      updateLine((lines) => {
+        const [left, _] = lines[i];
+        return [left, right];
+      });
+    },
+    [updateLine]
+  );
 
-  const applyObject = (obj, edge, newLines = undefined) => {
-    setLines((actualLines) => {
-      const usedLines = newLines ?? actualLines;
+  const applyObject = useCallback(
+    (obj, edge, newLines = undefined) => {
+      setLines((actualLines) => {
+        const usedLines = newLines ?? actualLines;
 
-      if (obj.type === "line") {
-        if (edge === "left") {
-          return applyLineToLeftEdge(usedLines, obj, settings);
-        } else if (edge === "right") {
-          return applyLineToRightEdge(usedLines, obj, settings);
+        if (obj.type === "line") {
+          if (edge === "left") {
+            return applyLineToLeftEdge(usedLines, obj, settings);
+          } else if (edge === "right") {
+            return applyLineToRightEdge(usedLines, obj, settings);
+          }
         }
-      }
 
-      if (obj.type === "left-circle") {
-        return applyCircle(usedLines, { ...obj, side: "left" }, settings, edge);
-      } else if (obj.type === "right-circle") {
-        return applyCircle(usedLines, { ...obj, side: "right" }, settings, edge);
-      }
+        if (obj.type === "left-circle") {
+          return applyCircle(
+            usedLines,
+            { ...obj, side: "left" },
+            settings,
+            edge
+          );
+        } else if (obj.type === "right-circle") {
+          return applyCircle(
+            usedLines,
+            { ...obj, side: "right" },
+            settings,
+            edge
+          );
+        }
 
-      if (obj.type === "bezier-curve") {
-        return applyBezierCurve(usedLines, obj, settings, edge);
-      }
+        if (obj.type === "bezier-curve") {
+          return applyBezierCurve(usedLines, obj, settings, edge);
+        }
 
-      throw new Error(
-        `cannot apply object of type "${obj.type}" to the ${edge} edge`
-      );
-    });
-  };
+        throw new Error(
+          `cannot apply object of type "${obj.type}" to the ${edge} edge`
+        );
+      });
+    },
+    [settings]
+  );
 
   return {
     lines,
