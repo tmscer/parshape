@@ -1,5 +1,6 @@
 import { memo, useCallback, useRef, useState } from "react";
 
+import crossBrowserCssProperty from "../utils/crossBrowserCssProperty";
 import Circle from "./Circle";
 import Line from "./Line";
 import ParagraphLine from "./ParagraphLine";
@@ -141,6 +142,7 @@ function CursorCoordinates({ pos, settings }) {
         color: "#999999",
         fontSize: "1.2em",
         pointerEvents: "none",
+        ...crossBrowserCssProperty("userSelect", "none"),
       }}
     >
       <tt>
