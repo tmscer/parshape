@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import arrayOfLen from "../utils/arrayOfLen";
 import calculateLineParamsFromPoints from "../utils/calculateLineParamsFromPoints";
@@ -10,7 +10,13 @@ export default function useLines(settings) {
   const { numLines: _numLines, hsize } = settings;
   const numLines = _numLines || 1;
 
-  const [lines, setLines] = useState(() => getNewLines([], numLines));
+  const [linesUnnormalized, setLines] = useState(() =>
+    getNewLines([], numLines)
+  );
+  const lines = useMemo(
+    () => linesUnnormalized.map((line) => normalizeLine(line, hsize)),
+    [linesUnnormalized, hsize]
+  );
 
   useEffect(() => {
     if (lines.length === numLines) {
@@ -18,13 +24,11 @@ export default function useLines(settings) {
     }
 
     setLines(getNewLines(lines, numLines));
-  }, [numLines, lines]);
+  }, [numLines, lines, setLines]);
 
   const updateLine = (i, line) => {
-    const normalizedLine = normalizeLine(line, hsize);
-
     setLines((lines) => {
-      return [...lines.slice(0, i), normalizedLine, ...lines.slice(i + 1)];
+      return [...lines.slice(0, i), line, ...lines.slice(i + 1)];
     });
   };
 
