@@ -72,4 +72,8 @@ $ npm run test  # or `npm run test:watch` when developing
 
 ### PDF
 
-In the near future, there will a badge below "PDF".
+[![Build Docs](https://github.com/tmscer/parshape/actions/workflows/docs.yml/badge.svg)](https://github.com/tmscer/parshape/actions/workflows/docs.yml)
+
+To obtain the PDF doc file, click the badge above and select the lastest successful run from branch `master`.
+The PDF contains high-level introduction to the project and explanation of some used
+algorithms and math formulas.

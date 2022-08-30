@@ -1,0 +1,60 @@
+
+\fontdef\titlefont{\setfontsize{mag2.1}\bf}
+\fontdef\subtitlefont{\setfontsize{mag1.3}\bf}
+
+\def\center#1{\hfil{#1}\hfil}
+
+\eoldef\title#1{\par
+  \center{\titlefont #1}% \hfil vycentruje
+  \medskip 					 % mezera po nadpisu
+  \par\nobreak
+}
+
+\eoldef\subtitle#1{\par
+	\noindent
+	\medskip
+	{\subtitlefont #1}
+	\smallskip
+}
+
+\eoldef\curvetitle#1{
+	{\setfontsize{mag1.1}\bf #1}
+}
+
+\def\macro#1{{\tt\char`\\#1}}
+
+\def\ang#1{#1^{\circ}}
+
+\def\exampleparshape{
+\parshape 29
+  46.393pt 422.434pt
+  116.499pt 323.124pt
+  171.071pt 253.747pt
+  211.346pt 203.548pt
+  238.668pt 169.32pt
+  254.511pt 148.836pt
+  260.478pt 140.126pt
+  258.214pt 141.366pt
+  249.514pt 150.701pt
+  236.001pt 166.545pt
+  219.163pt 187.557pt
+  200.283pt 212.767pt
+  180.429pt 241.737pt
+  160.414pt 275.117pt
+  140.853pt 317.797pt
+  122.161pt 361.535pt
+  104.627pt 358.131pt
+  88.439pt 353.534pt
+  73.68pt 347.509pt
+  60.404pt 340.001pt
+  48.573pt 331.047pt
+  38.164pt 320.671pt
+  29.139pt 339.875pt
+  21.445pt 368.353pt
+  14.99pt 395.593pt
+  9.716pt 421.652pt
+  5.562pt 446.59pt
+  2.462pt 470.475pt
+  0pt \hsize
+\noindent
+}

@@ -1,0 +1,30 @@
+name: Build Docs
+on:
+  push:
+    paths:
+      - doc/**
+
+jobs:
+  build-docs:
+    name: Compile TeX source
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u tmscer --password-stdin
+
+      - name: Pull TexLive image
+        run: docker pull ghcr.io/tmscer/texlive:latest
+
+      - name: Run TexLive
+        run: docker run --rm -v $(pwd):/src -w /src ghcr.io/tmscer/texlive:latest luatex -fmt optex parshape.tex
+        working-directory: ./doc
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v3 
+        with:
+          name: parshape-docs
+          path: doc/parshape.pdf
+          if-no-files-found: error
