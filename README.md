@@ -50,3 +50,26 @@ and served with
 ```console
 $ npm run start
 ```
+
+## Documentation
+
+This project is documented in two ways: code with its tests and a PDF file.
+
+### Code and tests
+
+Ideally all code should be tested -- don't understand what a line
+of code does? Try to change it or remove it and see what functionality breaks
+and which tests don't pass. Still have no clue? File an [issue](https://github.com/tmscer/parshape/issues/new).
+
+React components should be understandable to a React developer. For everything
+else there should be readable code (explanatory variables, short functions) and tests.
+
+Jest is the chosen test runner. To run all tests, use:
+
+```console
+$ npm run test  # or `npm run test:watch` when developing
+```
+
+### PDF
+
+In the near future, there will a badge below "PDF".
