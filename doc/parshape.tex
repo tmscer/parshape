@@ -1,0 +1,135 @@
+
+\input{config}
+\input{macros}
+\input{lorem}
+
+%%% obsah
+
+\title Visual \char`\\parshape editor for \TeX
+
+To try out the project, go to \ulink[https://parshape.com]{parshape.com} or checkout the
+code at \ulink[https://github.com/tmscer/parshape]{github.com/tmscer/parshape}.
+See this file's source at \ulink[https://github.com/tmscer/parshape/blob/master/doc/parshape.tex]{github.com/tmscer/parshape/blob/master/pages/index.js}.
+
+\subtitle The problem
+
+\macro{parshape} allows a {\TeX} user to shape their paragraph.
+The following block of text was shaped using
+\macro{parshape 3 2cm 12cm 4cm 320pt 2cm 12cm}:
+
+\parshape 3
+	2cm 12cm
+	4cm 320pt
+	2cm 12cm
+\noindent
+Notice the first line is moved by {\bf2cm} to the right and is {\bf12cm} long.
+The second line is moved by {\bf4cm} to the right and is {\bf400pt} long.
+The third line is move by {\bf2cm} to the right and is {\bf12cm} long.
+
+Creating just these 3 lines took the author quite a while.
+Trying to fit a paragraph around a more complex shape like an image, table or
+some weird shape is cumbersome and time consuming. Other software like MS Word
+help the user by being a visual tool where the user gets immediate feedback.
+{\TeX}, of course, isn't that.
+
+\subtitle The solution
+
+Below you can see two versions of the {\tt<Canvas>} component of the web-based solution.
+
+\hfil
+\hbox{\picw=8cm \inspic{before-bezier.png} \picw=8cm \inspic{after-bezier.png}}
+\hfil
+
+On the left is the {\it before} state. After the user {\it right clicks} at the bottom end
+of the blue Bézier curve. The new state shown on the right will emerge. A similar edit can be
+made to the right edge of every line of the paragraph and with other geometrical shapes.
+
+Here's how it looks like in use with some extra edits to the right edge of the paragraph:
+
+\exampleparshape
+\loremonepar
+
+\subtitle Supported geometrical shapes and their math
+
+The editor currently supports three geometrical shapes: lines, half-circles and Bézier curves.
+Line has a variant called {\it snap-angle line} which forces the line's angle to be
+a multiple of $15^{\circ}$.
+Intersection with paragraph lines is always calculated for the middle of the paragraph
+according to primitive register \macro{baselineskip}.
+
+The coordinate system has its origin in the left top corner of where the text can start.
+To the right x-axis increases and downward the y-axis also increases.
+
+\curvetitle Line
+
+This is the most simple geometric shape, Given two points, it is possible to get an equation
+of the form $y = ax + b,\;a,\!b \in {\bbb R}$. Then for every paragraph line, which are all
+horizontal of the form $y = baselineskip \cdot (i + 0.5)$, we can solve for $x$
+provided the drawn line isn't vertical. In all cases bounding box of the drawn line is checked
+in order to avoid the change of paragraph lines outside it.
+
+\curvetitle Snap-angle line
+
+The equation remains the same as for the normal line. However, we have recalculate the second placed
+point such that the line's angle is a multiple of $\ang{15}$ degrees or $\pi \over 12$ radians.
+We calculate the line's angle using using $\theta = \tan^{-1}{a}$ and round it.
+After that we {\it rotate} the second placed point using $\cos$ for x-coordinates $\sin$
+for y-coordiantes.
+
+\curvetitle Bézier curve
+
+For $n+1$ points, coordinates of {\it some} point on the Bézier curve would be:
+
+$$
+\vec{B_t} =
+t^0 (1-t)^n \cdot {\bf P_0} +
+t^1 (1-t)^{n-1} {n \choose 1} \cdot {\bf P_1} +
+\cdots +
+t^k (1-t)^{n-k} {n \choose k} \cdot {\bf P_k} +
+\cdots +
+t^n (1-t)^0 {\bf P_n}
+$$
+
+where $\bf P_i$ are placed points and $k \in {\bbb N}_0$ is an iterator from $0$ to $n$.
+Parameter $t$ is unique for each point and it is from the interval $[0,1]$.
+
+Intersection algorithm for Bézier curves does the following: for every paragraph
+line, intersect with all lines of the Bézier curve approximation and choose the
+leftmost or rightmost based on whether we're shaping the left edge or the right edge
+of the paragraph. Essentially we're reusing the previous algorithm for lines several
+times.
+
+\curvetitle Half-circles
+
+There are four cases to handle:
+1) we're shaping the {\it left} edge with the {\it left} half a full circle,
+2) we're shaping the {\it left} edge with the {\it right} a full circle,
+3) we're shaping the {\it right} edge with the {\it left} half a full circle,
+4) we're shaping the {\it right} edge with the {\it right} half a full circle.
+That can be achieved by knowing how to intersect a full circle with a horizontal
+paragraph line and the choosing which edge of the paragraph to change and choosing
+the intersection on left or the right.
+
+Equation for a circle with an origin $(x_0, y_0)$ has the form
+
+$$
+(x - x_0)^2 + (y - y_0)^2 = r^2
+$$
+
+where $r$ stands for radius. Given a paragraph line $y = c,\;c\in{\bbb R}$, we can solve
+for $x$:
+
+$$
+\eqalignno{
+(x - x_0)^2 + (c - y_0)^2 &= r^2 \cr
+x^2 -2x_0 + x_0^2+ (c - y_0)^2 &= r^2 \cr
+x^2 -2x_0x + (x_0^2+ (c - y_0)^2 - r^2) &= 0
+}
+$$
+
+That's nothing more than an ordinary quadratic equation. When determinant $D < 0$,
+the circle has no intersection with the current paragraph line. When determinant $D = 0$,
+there is only one intersection. When determinant $D > 0$, there are two intersections
+and we have to choose based on whether we're using a left or a right half-circle.
+
+\bye

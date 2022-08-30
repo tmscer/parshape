@@ -1,0 +1,24 @@
+name: TeXLive Docker Image
+on:
+  push:
+    paths:
+      - doc/Dockerfile
+    branches:
+      - master
+
+jobs:
+  build-docker-image:
+    name: Build TeXLive Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u tmscer --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/tmscer/texlive:latest .
+        working-directory: ./doc
+
+      - name: Push Docker image
+        run: docker push ghcr.io/tmscer/texlive:latest
