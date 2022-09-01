@@ -6,6 +6,12 @@ import floatEq from "../utils/floatEq";
 import isInLine from "../utils/isInLine";
 import solveQuadraticEquation from "../utils/solveQuadraticEquation";
 
+// This hook manages state of paragraph lines. The internal
+// representation of one paragraph line is a tuple of two numbers
+// `[a, b]`. Each number represents distance from an edge -
+// `a` is the distance from the left edge and `b` is the distance
+// from the right edge. This means that the paragraph line is
+// `b - a` long.
 export default function useParagraphLines(settings) {
   const { numLines: _numLines, hsize } = settings;
   const numLines = _numLines || 1;
