@@ -5,7 +5,7 @@
 
 %%% obsah
 
-\title Visual \char`\\parshape editor for \TeX
+\title Visual \char`\\parshape Editor for \TeX
 
 To try out the project, go to \ulink[https://parshape.com]{parshape.com} or checkout the
 code at \ulink[https://github.com/tmscer/parshape]{github.com/tmscer/parshape}.
@@ -50,7 +50,7 @@ Here's how it looks like in use with some extra edits to the right edge of the p
 \exampleparshape
 \loremonepar
 
-\subtitle Supported geometrical shapes and their math
+\subtitle Supported Geometrical Shapes and Their Math
 
 The editor currently supports three geometrical shapes: lines, half-circles and Bézier curves.
 Line has a variant called {\it snap-angle line} which forces the line's angle to be
@@ -69,7 +69,7 @@ horizontal of the form $y = baselineskip \cdot (i + 0.5)$, we can solve for $x$
 provided the drawn line isn't vertical. In all cases bounding box of the drawn line is checked
 in order to avoid the change of paragraph lines outside it.
 
-\curvetitle Snap-angle line
+\curvetitle Snap-angle Line
 
 The equation remains the same as for the normal line. However, we have recalculate the second placed
 point such that the line's angle is a multiple of $\ang{15}$ degrees or $\pi \over 12$ radians.
@@ -77,7 +77,7 @@ We calculate the line's angle using using $\theta = \tan^{-1}{a}$ and round it.
 After that we {\it rotate} the second placed point using $\cos$ for x-coordinates $\sin$
 for y-coordiantes.
 
-\curvetitle Bézier curve
+\curvetitle Bézier Curve
 
 For $n+1$ points, coordinates of {\it some} point on the Bézier curve would be:
 
