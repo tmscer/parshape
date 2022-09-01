@@ -2,6 +2,9 @@
 
 See [parshape.com](https://parshape.com) for a live version.
 
+This project came to be as a semestral work in subject [Typography and TeX](https://petr.olsak.net/typotex.html).
+Subject page on CTU's website can be found [here](https://bilakniha.cvut.cz/cs/predmet3407206.html).
+
 ## Static Build
 
 [![Static Build](https://github.com/tmscer/parshape/actions/workflows/static-build.yml/badge.svg?branch=master)](https://github.com/tmscer/parshape/actions/workflows/static-build.yml)
