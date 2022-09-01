@@ -5,6 +5,19 @@ See [parshape.com](https://parshape.com) for a live version.
 This project came to be as a semestral work in subject [Typography and TeX](https://petr.olsak.net/typotex.html).
 Subject page on CTU's website can be found [here](https://bilakniha.cvut.cz/cs/predmet3407206.html).
 
+## List of features
+
+- draw a shape of your paragraph with
+  - lines
+  - lines that snap to a multiple of 15°
+  - half-circles
+  - n-point Bézier curve
+- configure the app close to your TeX environment, this project can use
+  - `\baselineskip` and `\lineskip`
+  - `\hsize` and `\vsize`
+  - `\pagewidth` and `\page height`
+  - offset of text start: `\hoffset`, `\pdfhorigin`, `\voffset` and `\pdfvorigin`
+
 ## Static Build
 
 [![Static Build](https://github.com/tmscer/parshape/actions/workflows/static-build.yml/badge.svg?branch=master)](https://github.com/tmscer/parshape/actions/workflows/static-build.yml)
