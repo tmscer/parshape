@@ -93,3 +93,9 @@ $ npm run test  # or `npm run test:watch` when developing
 To obtain the PDF doc file, click the badge above and select the latest successful run from branch `master`.
 The PDF contains high-level introduction to the project and explanation of some used
 algorithms and math formulas.
+
+If you wish to compile the TeX source yourself, go to `./doc` and run
+
+```console
+$ lautex -fmt optex parshape.tex
+```
