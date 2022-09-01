@@ -15,21 +15,21 @@ See this file's source at \ulink[https://github.com/tmscer/parshape/blob/master/
 
 \macro{parshape} allows a {\TeX} user to shape their paragraph.
 The following block of text was shaped using
-\macro{parshape 3 2cm 12cm 4cm 320pt 2cm 12cm}:
+\macro{parshape 3 2cm 12cm 4cm 320pt 2cm 11cm}:
 
 \parshape 3
 	2cm 12cm
 	4cm 320pt
-	2cm 12cm
+	2cm 11cm
 \noindent
 Notice the first line is moved by {\bf2cm} to the right and is {\bf12cm} long.
 The second line is moved by {\bf4cm} to the right and is {\bf400pt} long.
-The third line is move by {\bf2cm} to the right and is {\bf12cm} long.
+The third line is moved by {\bf2cm} to the right and is {\bf11cm} long.
 
 Creating just these 3 lines took the author quite a while.
 Trying to fit a paragraph around a more complex shape like an image, table or
 some weird shape is cumbersome and time consuming. Other software like MS Word
-help the user by being a visual tool where the user gets immediate feedback.
+help the user by being a visual tool where users get immediate feedback.
 {\TeX}, of course, isn't that.
 
 \subtitle The solution
@@ -43,12 +43,12 @@ Below you can see two versions of the {\tt<Canvas>} component of the web-based s
 
 On the left is the {\it before} state. After the user {\it right clicks} at the bottom end
 of the blue Bézier curve. The new state shown on the right will emerge. A similar edit can be
-made to the right edge of every line of the paragraph and with other geometrical shapes.
+made to the right edge of every line of the paragraph and with other geometric shapes.
 
 \subtitle Configuration
 
 The \ulink[https://parshape.com]{web app} accepts several {\TeX} parameters to mimick a page.
-To get their values, insert the left column of the following snippet into your document.
+To get their values, insert the left column of the following snippet into your source file.
 The right column has values of this document.
 
 \begmulti 2
@@ -89,32 +89,32 @@ with some extra edits to the right edge of the paragraph:
 \exampleparshape
 \loremonepar
 
-\subtitle Supported Geometrical Shapes and Their Math
+\subtitle Supported Geometric Shapes and Their Math
 
-The editor currently supports three geometrical shapes: lines, half-circles and Bézier curves.
+The editor currently supports three geometric shapes: lines, half-circles and Bézier curves.
 Line has a variant called {\it snap-angle line} which forces the line's angle to be
 a multiple of $15^{\circ}$.
 Intersection with paragraph lines is always calculated for the middle of the paragraph
 according to primitive register \macro{baselineskip}.
 
 The coordinate system has its origin in the left top corner of where the text can start.
-To the right x-axis increases and downward the y-axis also increases.
+X-axis is positive to the right and y-axis is positive in the downward direction.
 
 \curvetitle Line
 
-This is the most simple geometric shape, Given two points, it is possible to get an equation
-of the form $y = ax + b,\;a,\!b \in {\bbchar R}$. Then for every paragraph line, which are all
+This is the most simple geometric shape. Given two points, it is possible to get an equation
+of the form $y = ax + b,\;a,\!b \in {\bbchar R}$. Then, for every paragraph line, which are all
 horizontal of the form $y = baselineskip \cdot (i + 0.5)$, we can solve for $x$
 provided the drawn line isn't vertical. In all cases bounding box of the drawn line is checked
 in order to avoid the change of paragraph lines outside it.
 
 \curvetitle Snap-angle Line
 
-The equation remains the same as for the normal line. However, we have recalculate the second placed
+The equation remains the same as for the normal line. However, we have to recalculate the second placed
 point such that the line's angle is a multiple of $\ang{15}$ degrees or $\pi \over 12$ radians.
 We calculate the line's angle using using $\theta = \tan^{-1}{a}$ and round it.
-After that we {\it rotate} the second placed point using $\cos$ for x-coordinates $\sin$
-for y-coordiantes.
+After that we {\it rotate} the second placed point using trigonometric function
+$\cos$ for x-coordinates $\sin$ for y-coordiantes.
 
 \curvetitle Bézier Curve
 
@@ -132,23 +132,24 @@ $$
 
 where $\bf P_i$ are placed points and $k \in {\bbchar N}_0$ is an iterator from $0$ to $n$.
 Parameter $t$ is unique for each point and it is from the interval $[0,1]$.
+The more accurate the approximation needs to be, the smaller $t_{step}$ should be.
 
 Intersection algorithm for Bézier curves does the following: for every paragraph
-line, intersect with all lines of the Bézier curve approximation and choose the
-leftmost or rightmost based on whether we're shaping the left edge or the right edge
-of the paragraph. Essentially we're reusing the previous algorithm for lines several
-times.
+line, intersect with all lines between adjacent points of the Bézier curve approximation
+and choose the leftmost or rightmost based on whether we're shaping the left edge or the
+right edge of the paragraph. Essentially we're reusing the previous algorithm for lines
+several times.
 
 \curvetitle Half-circles
 
 There are four cases to handle:
 1) we're shaping the {\it left} edge with the {\it left} half a full circle,
-2) we're shaping the {\it left} edge with the {\it right} a full circle,
+2) we're shaping the {\it left} edge with the {\it right} half a full circle,
 3) we're shaping the {\it right} edge with the {\it left} half a full circle,
 4) we're shaping the {\it right} edge with the {\it right} half a full circle.
 That can be achieved by knowing how to intersect a full circle with a horizontal
-paragraph line and the choosing which edge of the paragraph to change and choosing
-the intersection on left or the right.
+paragraph line and then choosing which edge of the paragraph to change and choosing
+whether to use the left or the right half-circle.
 
 Equation for a circle with an origin $(x_0, y_0)$ has the form
 
@@ -170,6 +171,6 @@ $$
 That's nothing more than an ordinary quadratic equation. When determinant $D < 0$,
 the circle has no intersection with the current paragraph line. When determinant $D = 0$,
 there is only one intersection. When determinant $D > 0$, there are two intersections
-and we have to choose based on whether we're using a left or a right half-circle.
+and we have to choose based on which half-circle we're using.
 
 \bye
