@@ -6,7 +6,7 @@ import floatEq from "../utils/floatEq";
 import isInLine from "../utils/isInLine";
 import solveQuadraticEquation from "../utils/solveQuadraticEquation";
 
-export default function useLines(settings) {
+export default function useParagraphLines(settings) {
   const { numLines: _numLines, hsize } = settings;
   const numLines = _numLines || 1;
 

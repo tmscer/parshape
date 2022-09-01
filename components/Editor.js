@@ -4,9 +4,9 @@ import { useCallback, useState } from "react";
 
 import useEditorKeybindings from "../hooks/useEditorKeybindings";
 import useHistory from "../hooks/useHistory";
-import useLines from "../hooks/useLines";
 import useOnCanvasClick from "../hooks/useOnCanvasClick";
 import useOnCanvasMouseOver from "../hooks/useOnCanvasMouseOver";
+import useParagraphLines from "../hooks/useParagraphLines";
 import Canvas from "./Canvas";
 import EdgeButton from "./EdgeButton";
 import ImportParshape from "./ImportParshape";
@@ -20,7 +20,8 @@ export default function Editor() {
     cloneDeep(Settings.DEFAULT_SETTINGS)
   );
 
-  const { lines, updateLine, applyObject, setLines } = useLines(settings);
+  const { lines, updateLine, applyObject, setLines } =
+    useParagraphLines(settings);
   const [newType, setNewType] = useState(null);
   const [newObject, setNewObject] = useState(null);
   const [edge, setEdge] = useState("left");
