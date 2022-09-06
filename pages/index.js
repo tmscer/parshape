@@ -4,6 +4,8 @@ import Image from "next/image";
 import Editor from "../components/Editor";
 import TeX from "../components/TeX";
 
+const PDF_URL = "/docs.pdf";
+
 export default function Home() {
   return (
     <div className="container">
@@ -16,7 +18,11 @@ export default function Home() {
         <h1 className="title">Parshape</h1>
 
         <p className="description">
-          Draw the shape of your <TeX /> paragraph in a GUI
+          Draw the shape of your <TeX /> paragraph in a GUI, see
+          <a className="pdfLink" href={PDF_URL}>
+            {" here "}
+          </a>
+          for a short PDF intro.
         </p>
       </heading>
 
@@ -165,6 +171,10 @@ export default function Home() {
 
         .logo {
           height: 1em;
+        }
+
+        .pdfLink {
+          color: blue;
         }
 
         @media (max-width: 600px) {
