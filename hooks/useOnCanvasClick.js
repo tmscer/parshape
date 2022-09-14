@@ -2,6 +2,8 @@ import { useCallback } from "react";
 
 import bezierCurve from "../utils/bezierCurve";
 import { degToRad } from "../utils/degRadConversion";
+import { extendPolygonalChain, newPolygonalChain } from "../utils/polygonalChain";
+import { extendSnapAnglePolygonalChain, newSnapAnglePolygonalChain } from "../utils/snapAnglePolygonalChain";
 import snapLineToAngle from "../utils/snapLineToAngle";
 
 export default function useOnCanvasClick({
@@ -102,6 +104,40 @@ export default function useOnCanvasClick({
           };
 
           addObject(curve);
+          clearNew();
+        }
+      } else if (newType === "polygonal-chain") {
+        if (!newObject) {
+          const polygonalChain = newPolygonalChain([[x, y]]);
+
+          setNewObject(polygonalChain);
+        } else if (event.type !== "contextmenu") {
+          const polygonalChain = extendPolygonalChain(newObject, [x, y]);
+
+          setNewObject(polygonalChain);
+        } else if (event.type === "contextmenu") {
+          event.preventDefault();
+
+          const polygonalChain = extendPolygonalChain(newObject, [x, y]);
+
+          addObject(polygonalChain);
+          clearNew();
+        }
+      } else if (newType = "snap-angle-polygonal-chain") {
+        if (!newObject) {
+          const polygonalChain = newSnapAnglePolygonalChain([[x, y]]);
+
+          setNewObject(polygonalChain)
+        } else if (event.type !== "contextmenu") {
+          const polygonalChain = extendSnapAnglePolygonalChain(newObject, [x, y]);
+
+          setNewObject(polygonalChain);
+        } else if (event.type === "contextmenu") {
+          event.preventDefault();
+
+          const polygonalChain = extendSnapAnglePolygonalChain(newObject, [x, y]);
+
+          addObject(polygonalChain);
           clearNew();
         }
       }

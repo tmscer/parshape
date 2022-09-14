@@ -2,6 +2,8 @@ import { useCallback } from "react";
 
 import bezierCurve from "../utils/bezierCurve";
 import { degToRad } from "../utils/degRadConversion";
+import { extendPolygonalChain } from "../utils/polygonalChain";
+import { extendSnapAnglePolygonalChain } from "../utils/snapAnglePolygonalChain";
 import snapLineToAngle from "../utils/snapLineToAngle";
 
 export default function useOnCanvasMouseOver({ newType, setNewObject }) {
@@ -58,6 +60,28 @@ export default function useOnCanvasMouseOver({ newType, setNewObject }) {
             points: bezierCurve([...newObj.sourcePoints, [x, y]]),
           };
         });
+      } else if (newType === "polygonal-chain") {
+        setNewObject((newObj) => {
+          if (!newObj) {
+            return newObj;
+          }
+
+          return {
+            ...newObj,
+            points: extendPolygonalChain(newObj, [x, y]).sourcePoints,
+          }
+        })
+      } else if (newType === "snap-angle-polygonal-chain") {
+        setNewObject((newObj) => {
+          if (!newObj) {
+            return newObj;
+          }
+
+          return {
+            ...newObj,
+            points: extendSnapAnglePolygonalChain(newObj, [x, y]).sourcePoints,
+          };
+        })
       }
     },
     [newType, setNewObject]

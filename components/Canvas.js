@@ -109,7 +109,10 @@ function _RenderObject({ obj }) {
         right={right}
       />
     );
-  } else if (obj.type === "polygonal-chain" || obj.type === "bezier-curve") {
+  } else if (
+    obj.type.includes("polygonal-chain") ||
+    obj.type === "bezier-curve"
+  ) {
     const { points } = obj;
 
     return (

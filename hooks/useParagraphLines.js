@@ -91,7 +91,7 @@ export default function useParagraphLines(settings) {
           );
         }
 
-        if (obj.type === "bezier-curve") {
+        if (obj.type === "bezier-curve" || obj.type.includes("polygonal-chain")) {
           return applyBezierCurve(usedLines, obj, settings, edge);
         }
 
